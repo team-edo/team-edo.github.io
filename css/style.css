@@ -432,3 +432,22 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--focus); outline
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
 }
+
+/* Article body: numbered section headings, callouts, step lists, tables */
+.article-body { counter-reset: section; }
+.article-body h2 { counter-increment: section; position: relative; padding-top: 1.6em; border-top: 1px solid var(--line); }
+.article-body h2::before { content: counter(section, decimal-leading-zero); display: inline-flex; align-items: center; justify-content: center; min-width: 34px; height: 24px; margin: 0 12px 0 0; padding: 0 8px; border-radius: 6px; background: #f0f4d8; color: #526011; font-size: 13px; font-weight: 700; letter-spacing: .5px; vertical-align: 4px; }
+.article-body blockquote { position: relative; margin: 30px 0; padding: 18px 22px 18px 24px; border-left: 4px solid var(--lime); border-radius: 0 12px 12px 0; background: #f7f9ee; color: var(--ink); }
+.article-body blockquote p { margin: .3em 0; }
+.article-body ol { counter-reset: step; list-style: none; padding: 0; }
+.article-body ol > li { counter-increment: step; position: relative; margin: 0; padding: 14px 16px 14px 58px; border: 1px solid var(--line); border-radius: 12px; background: #fff; }
+.article-body ol > li + li { margin-top: 10px; }
+.article-body ol > li::before { content: counter(step); position: absolute; left: 16px; top: 50%; transform: translateY(-50%); display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--lime); color: var(--ink); font-size: 14px; font-weight: 700; }
+.article-body table { display: table; width: 100%; margin: 28px 0; border: 1px solid var(--line); border-radius: 12px; border-collapse: separate; border-spacing: 0; overflow: hidden; }
+.article-body th { background: #f0f4d8; color: #3d4710; }
+.article-body tr:last-child td { border-bottom: 0; }
+@media (max-width: 600px) {
+  .article-body h2::before { min-width: 30px; height: 22px; margin-right: 8px; font-size: 12px; }
+  .article-body ol > li { padding-left: 52px; }
+  .article-body table { display: block; overflow-x: auto; }
+}
