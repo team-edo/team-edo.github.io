@@ -1,23 +1,45 @@
 (() => {
   "use strict";
 
-  document.querySelectorAll("[data-carousel]").forEach((carousel) => {
-    const slides = Array.from(carousel.querySelectorAll("[data-slide]"));
-    const controls = carousel.querySelector("[data-carousel-controls]");
+  // 모바일 메뉴: 버튼으로 열고 닫으며, Esc를 누르면 닫고 버튼으로 초점을 돌려줍니다.
+  const menuButton = document.querySelector("[data-menu-button]");
+  const nav = menuButton && document.getElementById(menuButton.getAttribute("aria-controls"));
+  if (menuButton && nav) {
+    const setOpen = (open) => {
+      menuButton.setAttribute("aria-expanded", String(open));
+      menuButton.setAttribute("aria-label", open ? "메뉴 닫기" : "메뉴 열기");
+      nav.classList.toggle("open", open);
+    };
+    menuButton.addEventListener("click", () => setOpen(menuButton.getAttribute("aria-expanded") !== "true"));
+    nav.querySelectorAll("a").forEach((link) => link.addEventListener("click", () => setOpen(false)));
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && nav.classList.contains("open")) {
+        setOpen(false);
+        menuButton.focus();
+      }
+    });
+    document.addEventListener("click", (event) => {
+      if (nav.classList.contains("open") && !nav.contains(event.target) && !menuButton.contains(event.target)) setOpen(false);
+    });
+  }
+
+  // 추천 글: 이전·다음 버튼과 좌우 방향키로 넘깁니다. 자동 재생은 하지 않습니다.
+  document.querySelectorAll("[data-spotlight]").forEach((spotlight) => {
+    const slides = Array.from(spotlight.querySelectorAll("[data-slide]"));
+    const visuals = Array.from(spotlight.querySelectorAll("[data-visual]"));
+    const controls = spotlight.querySelector("[data-spot-controls]");
     if (slides.length < 2 || !controls) return;
-    const previous = controls.querySelector("[data-carousel-prev]");
-    const next = controls.querySelector("[data-carousel-next]");
-    const count = controls.querySelector("[data-carousel-count]");
+    const counter = controls.querySelector("[data-spot-counter]");
+    const pad = (value) => String(value).padStart(2, "0");
     let current = 0;
     const show = (index) => {
-      const restoreFocus = slides[current].contains(document.activeElement);
       current = (index + slides.length) % slides.length;
       slides.forEach((slide, position) => { slide.hidden = position !== current; });
-      count.textContent = `${current + 1} / ${slides.length}`;
-      if (restoreFocus) slides[current].querySelector("a").focus({ preventScroll: true });
+      visuals.forEach((visual, position) => { visual.hidden = position !== current; });
+      counter.textContent = `${pad(current + 1)} / ${pad(slides.length)}`;
     };
-    previous.addEventListener("click", () => show(current - 1));
-    next.addEventListener("click", () => show(current + 1));
+    controls.querySelector("[data-spot-prev]").addEventListener("click", () => show(current - 1));
+    controls.querySelector("[data-spot-next]").addEventListener("click", () => show(current + 1));
     controls.addEventListener("keydown", (event) => {
       if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
         event.preventDefault();
@@ -27,40 +49,33 @@
     controls.hidden = false;
   });
 
-  document.querySelectorAll("[data-blog]").forEach((blog) => {
-    const tools = blog.querySelector("[data-post-tools]");
-    if (!tools) return;
-    const input = tools.querySelector("[data-post-search]");
-    const category = tools.querySelector("[data-category-filter]");
-    const cards = Array.from(blog.querySelectorAll("[data-post-list] [data-post-card]"));
-    const count = blog.querySelector("[data-post-count]");
-    const result = blog.querySelector("[data-filter-result]");
-    const empty = blog.querySelector("[data-no-results]");
-    const normalize = (text) => text.normalize("NFKC").toLocaleLowerCase("ko");
-    const entries = cards.map((card) => ({ card, text: normalize(card.dataset.search), categories: normalize(card.dataset.categories) }));
-    const update = () => {
-      const words = normalize(input.value.trim()).split(/\s+/).filter(Boolean);
-      const selected = normalize(category.value);
-      let visible = 0;
-      entries.forEach(({ card, text, categories }) => {
-        const matches = (!selected || categories.includes(`|${selected}|`)) && words.every((word) => text.includes(word));
-        card.hidden = !matches;
-        if (matches) visible += 1;
+  // 분야별로 읽기: 선택한 분야의 글만 보여 주고 결과 수를 알립니다.
+  document.querySelectorAll("[data-journal]").forEach((journal) => {
+    const buttons = Array.from(journal.querySelectorAll("[data-category]"));
+    const posts = Array.from(journal.querySelectorAll("[data-post]"));
+    const empty = journal.querySelector("[data-empty]");
+    const result = journal.querySelector("[data-filter-result]");
+    if (!buttons.length) return;
+    const filter = (category) => {
+      let count = 0;
+      buttons.forEach((button) => button.setAttribute("aria-pressed", String(button.dataset.category === category)));
+      posts.forEach((post) => {
+        const visible = category === "all" || post.dataset.categories.split(" ").includes(category);
+        post.hidden = !visible;
+        if (visible) count += 1;
       });
-      count.textContent = String(visible);
-      const filtered = words.length > 0 || selected !== "";
-      result.hidden = !filtered;
-      result.textContent = filtered ? `${visible}편의 글을 찾았어요.` : "";
-      empty.hidden = visible !== 0;
+      if (empty) empty.hidden = count > 0;
+      if (result) {
+        const selected = buttons.find((button) => button.dataset.category === category);
+        const name = category === "all" ? "전체" : selected.firstChild.textContent.trim();
+        result.textContent = `${name} 글 ${count}편`;
+      }
     };
-    input.addEventListener("input", update);
-    category.addEventListener("change", update);
-    blog.querySelector("[data-reset-filters]").addEventListener("click", () => {
-      input.value = "";
-      category.value = "";
-      update();
-      input.focus();
+    buttons.forEach((button) => button.addEventListener("click", () => filter(button.dataset.category)));
+    const reset = journal.querySelector("[data-reset-filter]");
+    if (reset) reset.addEventListener("click", () => {
+      filter("all");
+      buttons[0].focus();
     });
-    tools.hidden = false;
   });
 })();
