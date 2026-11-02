@@ -49,33 +49,50 @@
     controls.hidden = false;
   });
 
-  // 분야별로 읽기: 선택한 분야의 글만 보여 주고 결과 수를 알립니다.
+  // 직무별·작성자별로 읽기: 두 조건을 함께 적용해 맞는 글만 보여 주고 결과 수를 알립니다.
   document.querySelectorAll("[data-journal]").forEach((journal) => {
-    const buttons = Array.from(journal.querySelectorAll("[data-category]"));
+    const groups = Array.from(journal.querySelectorAll("[data-filter-group]"));
     const posts = Array.from(journal.querySelectorAll("[data-post]"));
     const empty = journal.querySelector("[data-empty]");
     const result = journal.querySelector("[data-filter-result]");
-    if (!buttons.length) return;
-    const filter = (category) => {
+    if (!groups.length) return;
+    const selected = Object.fromEntries(groups.map((group) => [group.dataset.filterGroup, "all"]));
+    const matches = (post, key) => {
+      if (selected[key] === "all") return true;
+      // 직무는 여러 개일 수 있어 공백으로 나누고, 작성자는 이름 전체를 비교합니다.
+      return key === "category" ? post.dataset.category.split(" ").includes(selected[key]) : post.dataset[key] === selected[key];
+    };
+    const apply = () => {
       let count = 0;
-      buttons.forEach((button) => button.setAttribute("aria-pressed", String(button.dataset.category === category)));
       posts.forEach((post) => {
-        const visible = category === "all" || post.dataset.categories.split(" ").includes(category);
+        const visible = Object.keys(selected).every((key) => matches(post, key));
         post.hidden = !visible;
         if (visible) count += 1;
       });
       if (empty) empty.hidden = count > 0;
       if (result) {
-        const selected = buttons.find((button) => button.dataset.category === category);
-        const name = category === "all" ? "전체" : selected.firstChild.textContent.trim();
-        result.textContent = `${name} 글 ${count}편`;
+        const names = groups
+          .filter((group) => selected[group.dataset.filterGroup] !== "all")
+          .map((group) => group.querySelector('[aria-pressed="true"]').firstChild.textContent.trim());
+        result.textContent = `${names.length ? names.join(" · ") : "전체"} 글 ${count}편`;
       }
     };
-    buttons.forEach((button) => button.addEventListener("click", () => filter(button.dataset.category)));
+    groups.forEach((group) => {
+      const buttons = Array.from(group.querySelectorAll("[data-value]"));
+      buttons.forEach((button) => button.addEventListener("click", () => {
+        buttons.forEach((other) => other.setAttribute("aria-pressed", String(other === button)));
+        selected[group.dataset.filterGroup] = button.dataset.value;
+        apply();
+      }));
+    });
     const reset = journal.querySelector("[data-reset-filter]");
     if (reset) reset.addEventListener("click", () => {
-      filter("all");
-      buttons[0].focus();
+      groups.forEach((group) => {
+        group.querySelectorAll("[data-value]").forEach((button) => button.setAttribute("aria-pressed", String(button.dataset.value === "all")));
+        selected[group.dataset.filterGroup] = "all";
+      });
+      apply();
+      groups[0].querySelector("[data-value]").focus();
     });
   });
 })();

@@ -142,6 +142,7 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--focus); outline
 .filters button span { font-size: 13px; color: #6b6d5a; }
 .filters button[aria-pressed="true"] { background: var(--lime); color: var(--ink); font-weight: 600; }
 .filters button[aria-pressed="true"] span { color: var(--ink); }
+.side-block h2.filter-title-next { margin-top: 26px; padding-top: 22px; border-top: 1px solid var(--line); }
 .noscript-note { margin: 12px 9px 0; font-size: 14px; }
 .side-block.reading { padding: 22px; background: #fff; border: 1px solid var(--line); }
 .reading h2 { margin-left: 0; }
@@ -323,7 +324,8 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--focus); outline
   .journal-sidebar { display: contents; }
   .journal-main { grid-column: 1; grid-row: 2; }
   .side-block.fields { grid-column: 1; grid-row: 1; min-width: 0; margin: 0 0 12px; padding: 0 0 18px; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; background: #fff; }
-  .side-block.fields h2 { display: none; }
+  .side-block.fields h2 { margin: 0 0 8px; font-size: 13px; font-weight: 600; color: var(--muted); }
+  .side-block.fields h2.filter-title-next { margin-top: 14px; padding-top: 0; border-top: 0; }
   .filters { flex-direction: row; gap: 6px; max-width: 100%; overflow-x: auto; scrollbar-width: none; }
   .filters::-webkit-scrollbar { display: none; }
   .filters button { flex: none; min-height: 44px; padding: 10px 15px; border: 1px solid var(--line); font-size: 15px; white-space: nowrap; }
