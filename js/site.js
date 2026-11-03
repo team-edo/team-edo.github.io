@@ -24,6 +24,7 @@
   }
 
   // 추천 글: 이전·다음 버튼과 좌우 방향키로 넘깁니다. 자동 재생은 하지 않습니다.
+  // 모든 글을 같은 칸에 겹쳐 두고 보이기만 바꿔서, 글 길이가 달라도 버튼·이미지 위치가 그대로입니다.
   document.querySelectorAll("[data-spotlight]").forEach((spotlight) => {
     const slides = Array.from(spotlight.querySelectorAll("[data-slide]"));
     const visuals = Array.from(spotlight.querySelectorAll("[data-visual]"));
@@ -34,7 +35,12 @@
     let current = 0;
     const show = (index) => {
       current = (index + slides.length) % slides.length;
-      slides.forEach((slide, position) => { slide.hidden = position !== current; });
+      slides.forEach((slide, position) => {
+        const off = position !== current;
+        slide.classList.toggle("is-hidden", off);
+        slide.inert = off;
+        if (off) slide.setAttribute("aria-hidden", "true"); else slide.removeAttribute("aria-hidden");
+      });
       visuals.forEach((visual, position) => { visual.hidden = position !== current; });
       counter.textContent = `${pad(current + 1)} / ${pad(slides.length)}`;
     };
