@@ -43,6 +43,9 @@ main {
 .gsc-left-header em { display: none; }
 .gsc-comments-count a, .gsc-comments-count a.underline { font-size: 19px; font-weight: 700; text-decoration-line: none !important; }
 .gsc-social-reaction-summary-item { height: 34px; padding: 0 12px; border-radius: 999px; border-color: var(--color-border-default); font-size: 14px; }
+/* giscus 기본값(baseline 정렬)은 이모지·숫자를 버튼 가운데보다 4px 위에 둔다. */
+.gsc-social-reaction-summary-item { align-items: center !important; }
+.gsc-social-reaction-summary-item-count { line-height: 1 !important; }
 .gsc-social-reaction-summary-item:not(:first-child) { margin-left: 4px; }
 .gsc-direct-reaction-button.has-reacted, .gsc-social-reaction-summary-item.has-reacted { border-color: #adbe31; background: #f0f4d8; }
 .gsc-reactions-button { width: 34px; padding: 0; justify-content: center; }
