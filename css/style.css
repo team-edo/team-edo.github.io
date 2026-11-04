@@ -145,7 +145,16 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--focus); outline
 .filters button span { font-size: 13px; color: #6b6d5a; }
 .filters button[aria-pressed="true"] { background: var(--lime); color: var(--ink); font-weight: 600; }
 .filters button[aria-pressed="true"] span { color: var(--ink); }
-.side-block h2.filter-title-next { margin-top: 26px; padding-top: 22px; border-top: 1px solid var(--line); }
+.filter-toggle + .filter-toggle { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line); }
+.filter-toggle summary { display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 9px; border-radius: 6px; cursor: pointer; list-style: none; }
+.filter-toggle summary::-webkit-details-marker { display: none; }
+.filter-toggle summary:hover { background: #eef1e2; }
+.filter-toggle summary:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.filter-toggle summary::after { content: ""; flex: none; width: 8px; height: 8px; margin: -4px 2px 0 0; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; color: var(--muted); transform: rotate(45deg); transition: transform .15s; }
+.filter-toggle[open] summary::after { margin-top: 4px; transform: rotate(-135deg); }
+.side-block .filter-toggle h2 { flex: 1; margin: 0; }
+.filter-current { overflow: hidden; max-width: 96px; font-size: 13px; color: var(--muted); text-overflow: ellipsis; white-space: nowrap; }
+.filter-toggle[open] .filters { margin-top: 8px; }
 .noscript-note { margin: 12px 9px 0; font-size: 14px; }
 .side-block.reading { padding: 22px; background: #fff; border: 1px solid var(--line); }
 .reading h2 { margin-left: 0; }
@@ -329,8 +338,11 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--focus); outline
   .journal-sidebar { display: contents; }
   .journal-main { grid-column: 1; grid-row: 2; }
   .side-block.fields { grid-column: 1; grid-row: 1; min-width: 0; margin: 0 0 12px; padding: 0 0 18px; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; background: #fff; }
-  .side-block.fields h2 { margin: 0 0 8px; font-size: 13px; font-weight: 600; color: var(--muted); }
-  .side-block.fields h2.filter-title-next { margin-top: 14px; padding-top: 0; border-top: 0; }
+  .side-block.fields h2 { font-size: 14px; font-weight: 600; color: var(--ink); }
+  .filter-toggle + .filter-toggle { margin-top: 4px; padding-top: 4px; }
+  .filter-toggle summary { padding: 0; }
+  .filter-toggle summary:hover { background: transparent; }
+  .filter-current { max-width: 140px; }
   .filters { flex-direction: row; gap: 6px; max-width: 100%; overflow-x: auto; scrollbar-width: none; }
   .filters::-webkit-scrollbar { display: none; }
   .filters button { flex: none; min-height: 44px; padding: 10px 15px; border: 1px solid var(--line); font-size: 15px; white-space: nowrap; }

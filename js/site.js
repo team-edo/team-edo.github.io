@@ -76,10 +76,14 @@
         if (visible) count += 1;
       });
       if (empty) empty.hidden = count > 0;
+      const label = (group) => group.querySelector('[aria-pressed="true"]').firstChild.textContent.trim();
+      // 접힌 토글에서도 지금 고른 항목이 보이도록 제목 옆 표시를 바꿉니다.
+      groups.forEach((group) => {
+        const current = group.closest("details")?.querySelector("[data-filter-current]");
+        if (current) current.textContent = selected[group.dataset.filterGroup] === "all" ? "전체" : label(group);
+      });
       if (result) {
-        const names = groups
-          .filter((group) => selected[group.dataset.filterGroup] !== "all")
-          .map((group) => group.querySelector('[aria-pressed="true"]').firstChild.textContent.trim());
+        const names = groups.filter((group) => selected[group.dataset.filterGroup] !== "all").map(label);
         result.textContent = `${names.length ? names.join(" · ") : "전체"} 글 ${count}편`;
       }
     };
@@ -98,7 +102,9 @@
         selected[group.dataset.filterGroup] = "all";
       });
       apply();
-      groups[0].querySelector("[data-value]").focus();
+      // 접혀 있으면 버튼에 초점을 둘 수 없으므로 첫 토글 제목으로 옮깁니다.
+      const first = groups[0].closest("details");
+      (first && !first.open ? first.querySelector("summary") : groups[0].querySelector("[data-value]")).focus();
     });
   });
 })();
