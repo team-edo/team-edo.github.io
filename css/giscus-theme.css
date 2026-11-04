@@ -1,0 +1,82 @@
+/* giscus 전용 테마: giscus 기본 light 테마 위에 블로그 색·글꼴·배치를 덮어쓴다.
+   giscus iframe 안에서 불러오므로 사이트 style.css의 변수는 쓸 수 없다.
+   giscus 유틸리티 클래스(mt-2, underline, rounded-t 등)를 이겨야 하는 속성만 !important를 쓴다. */
+@import url("https://giscus.app/themes/light.css");
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap");
+
+main {
+  --color-fg-default: #27221e;
+  --color-fg-muted: #625f59;
+  --color-canvas-default: #fff;
+  --color-canvas-subtle: #f7f8f5;
+  --color-border-default: #e7e8e3;
+  --color-border-muted: #eeefea;
+  --color-accent-fg: #526011;
+  --color-accent-emphasis: #64750b;
+  --color-accent-muted: #adbe3166;
+  --color-accent-subtle: #f0f4d8;
+  --color-btn-primary-text: #27221e;
+  --color-btn-primary-bg: #adbe31;
+  --color-btn-primary-border: transparent;
+  --color-btn-primary-shadow: none;
+  --color-btn-primary-inset-shadow: none;
+  --color-btn-primary-hover-bg: #9caf22;
+  --color-btn-primary-hover-border: transparent;
+  --color-btn-primary-selected-bg: #9caf22;
+  --color-btn-primary-disabled-text: #27221e80;
+  --color-btn-primary-disabled-bg: #dfe6a6;
+  --color-btn-primary-disabled-border: transparent;
+  --color-social-reaction-bg-hover: #f0f4d8;
+  --color-social-reaction-bg-reacted-hover: #e4ebbd;
+  font-family: "Noto Sans KR", -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  letter-spacing: -.2px;
+  word-break: keep-all;
+}
+
+/* 글 반응을 "댓글 N" 줄의 오른쪽으로 옮긴다. */
+.gsc-main { position: relative; }
+.gsc-reactions { position: absolute; top: 0; right: 0; z-index: 2; margin: 0; }
+.gsc-reactions-count { display: none; }
+.gsc-reactions > div, .gsc-reactions > div.mt-2 { justify-content: flex-end; margin-top: 0 !important; }
+.gsc-header { display: flex; align-items: center; min-height: 34px; margin-bottom: 18px; padding-right: 220px; padding-bottom: 0; }
+.gsc-left-header { align-items: center; }
+.gsc-left-header em { display: none; }
+.gsc-comments-count a, .gsc-comments-count a.underline { font-size: 19px; font-weight: 700; text-decoration-line: none !important; }
+.gsc-social-reaction-summary-item { height: 34px; padding: 0 12px; border-radius: 999px; border-color: var(--color-border-default); font-size: 14px; }
+.gsc-social-reaction-summary-item:not(:first-child) { margin-left: 4px; }
+.gsc-direct-reaction-button.has-reacted, .gsc-social-reaction-summary-item.has-reacted { border-color: #adbe31; background: #f0f4d8; }
+.gsc-reactions-button { width: 34px; padding: 0; justify-content: center; }
+.gsc-reactions-popover { border-radius: 12px; }
+
+/* 입력창: 탭 영역을 걷어 내고 둥근 상자 하나로 보이게 한다. */
+.gsc-comment-box { border: 0; background: transparent; }
+.gsc-comment-box-tabs { overflow: visible; align-items: center; margin-bottom: 10px; border: 0; background: transparent; }
+.gsc-comment-box-tabs > div:first-child, .gsc-comment-box-tabs > div.mt-2 { display: flex; gap: 4px; margin: 0 !important; }
+.gsc-comment-box-tabs > div:first-child button { height: 32px; margin: 0 !important; padding: 0 14px !important; border: 0 !important; border-radius: 999px !important; font-size: 14px; line-height: 32px; }
+.gsc-comment-box-tabs > div:first-child button.color-bg-canvas { background: #f0f4d8; color: #526011; font-weight: 600; }
+.gsc-comment-box-main, .gsc-comment-box-write { margin: 0 !important; padding: 0 !important; }
+.gsc-comment-box-tabs .gsc-comment-box-md-toolbar { align-self: center; }
+.gsc-comment-box-textarea { min-height: 110px; padding: 14px 16px; border: 1px solid var(--color-border-default); border-bottom: 0; border-radius: 14px 14px 0 0; background: #fff; font-size: 15px; line-height: 1.7; }
+.gsc-comment-box-textarea-extras { border: 1px solid var(--color-border-default); border-top: 0; border-radius: 0 0 14px 14px; background: #fff; }
+.gsc-comment-box-textarea:focus, .gsc-comment-box-textarea:focus + .gsc-comment-box-textarea-extras { border-color: #adbe31; box-shadow: none; }
+.gsc-comment-box-bottom { margin: 0 !important; padding: 12px 0 0 !important; border: 0; }
+.gsc-comment-box-bottom .btn { min-height: 42px; padding: 0 20px; border-radius: 10px; font-size: 15px; font-weight: 600; }
+.gsc-comment-box-preview { border: 1px solid var(--color-border-default); border-radius: 14px; }
+
+/* 댓글: 테두리 상자 대신 옅은 바탕의 둥근 카드로 보이게 한다. */
+.gsc-timeline { gap: 12px; }
+.gsc-comment > div { border: 0; border-radius: 16px; background: #f7f8f5; }
+.gsc-comment-header { padding: 18px 20px 4px; background: transparent; }
+.gsc-comment-author-avatar img { width: 32px; height: 32px; }
+.gsc-comment-author-avatar span { font-weight: 600; }
+.gsc-comment-header a { text-decoration-line: none !important; }
+.gsc-comment-content { padding: 4px 20px 12px 60px; font-size: 15px; line-height: 1.75; }
+.gsc-comment-footer { padding: 0 20px 14px 60px; border: 0; }
+.gsc-replies { border-top: 1px solid var(--color-border-muted); background: transparent; }
+.gsc-reply-box { border-top: 1px solid var(--color-border-muted); background: transparent; border-radius: 0 0 16px 16px; }
+.gsc-tl-line { display: none; }
+
+@media (max-width: 600px) {
+  .gsc-header { padding-right: 120px; }
+  .gsc-comment-content, .gsc-comment-footer { padding-left: 20px; }
+}
