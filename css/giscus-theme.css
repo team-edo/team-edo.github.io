@@ -48,6 +48,13 @@ main {
 .gsc-social-reaction-summary-item-count { line-height: 1 !important; }
 .gsc-social-reaction-summary-item:not(:first-child) { margin-left: 4px; }
 .gsc-direct-reaction-button.has-reacted, .gsc-social-reaction-summary-item.has-reacted { border-color: #adbe31; background: #f0f4d8; }
+/* 댓글 추천 버튼: giscus 기본값은 여백·테두리가 없어 반응 버튼과 모양이 다르다. 같은 알약 모양으로 맞춘다. */
+.gsc-upvote-button { gap: 4px; padding: 0 12px !important; border: 1px solid var(--color-border-default) !important; }
+.gsc-upvote-button .gsc-social-reaction-summary-item-count { padding: 0 !important; }
+.gsc-upvote-button.has-reacted { border-color: #adbe31 !important; background: #f0f4d8; }
+/* 버튼 줄을 댓글 본문 시작 위치에 맞추고 버튼 간격을 6px로 통일한다. */
+.gsc-comment-reactions { align-items: center; gap: 6px; margin-left: 0 !important; }
+.gsc-comment-reactions .gsc-social-reaction-summary-item:not(:first-child) { margin-left: 0; }
 .gsc-reactions-button { width: 34px; padding: 0; justify-content: center; }
 .gsc-reactions-popover { border-radius: 12px; }
 /* 글 반응 버튼은 오른쪽 끝에 있으므로 선택 창을 버튼 오른쪽 끝에 맞춰 왼쪽으로 연다. */
