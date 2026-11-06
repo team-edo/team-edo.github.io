@@ -6,4 +6,8 @@
 &lt;p>얼쑤의 연주 비교 기능을 고치면서, 답은 &lt;strong>고치기 전에 그 테스트가 실패했는지 봐야 안다&lt;/strong>는 걸 배웠습니다.&lt;/p>
 &lt;h2 id="다시-연주한-구간을-비교하는-기능">다시 연주한 구간을 비교하는 기능&lt;/h2>
 &lt;p>&lt;strong>얼쑤&lt;/strong>는 국악기 연주를 녹음하면 음표마다 맞게 연주했는지 알려 주는 앱입니다. 틀린 구간만 골라 다시 연주하면, 앱이 &lt;strong>이전 연주와 이번 연주를 비교&lt;/strong>해 어떤 음을 고쳤고 어떤 음이 아직 틀렸는지 보여 줍니다.&lt;/p></description></item><item><title>얼쑤 기술 블로그를 시작합니다</title><link>https://team-edo.github.io/posts/2026/10/hello/</link><pubDate>Tue, 20 Oct 2026 00:00:00 +0000</pubDate><guid>https://team-edo.github.io/posts/2026/10/hello/</guid><description>&lt;p>얼쑤를 만드는 &lt;strong>Team Edo&lt;/strong>의 기술 블로그를 시작합니다.&lt;/p>
-&lt;p>앞으로 이곳에 프로젝트를 만들며 배운 것과 문제를 해결한 과정을 파트별로 기록할 예정이에요.&lt;/p></description></item></channel></rss>
+&lt;p>앞으로 이곳에 프로젝트를 만들며 배운 것과 문제를 해결한 과정을 파트별로 기록할 예정이에요.&lt;/p>
+&lt;h2 id="코코와-함께-쌓아-갈-개발-기록">코코와 함께 쌓아 갈 개발 기록&lt;/h2>
+&lt;p>썸네일의 주인공 &lt;strong>코코&lt;/strong>는 팀원이 키우는 반려견이에요. 저희가 사용하는 개발 도구 &lt;strong>COCO 스킬&lt;/strong>도 코코의 이름에서 따왔습니다.&lt;/p>
+&lt;p>앞으로 COCO 스킬을 활용해 개발을 진행하고, 그 과정에서 어떤 선택을 했는지, 무엇을 확인하고 배웠는지 이 블로그에 남기려고 해요.&lt;/p>
+&lt;p>얼쑤의 백호 캐릭터와 코코도 블로그 곳곳에서 함께 인사할 예정입니다. 우리 소리에 가까워지는 앱을 만드는 과정, 차근차근 기록해 볼게요.&lt;/p></description></item></channel></rss>
