@@ -225,7 +225,10 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--focus); outline
 .comments { margin-top: 56px; padding-top: 36px; border-top: 1px solid var(--line); }
 .comments-note { margin: 14px 0 0; color: var(--muted); font-size: 13px; }
 .adjacent-posts strong { display: block; margin-top: 4px; font-size: 16px; font-weight: 600; line-height: 1.6; }
-.article-toc { display: none; align-self: start; position: sticky; top: 32px; margin-top: 36px; padding-left: 18px; border-left: 1px solid var(--line); font-size: 14px; }
+.article-sidebar { display: none; min-width: 0; align-self: start; position: sticky; top: 32px; margin-top: 36px; }
+.article-cover { margin-bottom: 28px; }
+.article-cover img { display: block; width: 100%; height: auto; border-radius: 10px; }
+.article-toc { padding-left: 18px; border-left: 1px solid var(--line); font-size: 14px; }
 .article-toc h2 { margin: 0 0 12px; font-size: 14px; font-weight: 600; }
 .article-toc ul { list-style: none; margin: 0; padding: 0; }
 .article-toc ul ul { padding-left: 12px; }
@@ -238,8 +241,9 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--focus); outline
 .chroma .s, .chroma .s1, .chroma .s2, .chroma .na { color: #805346; }
 .chroma .m, .chroma .mi, .chroma .mf, .chroma .kc { color: #437e80; }
 @media (min-width: 1180px) {
-  .reader-grid:has(.article-toc) { grid-template-columns: minmax(0, 720px) 200px; }
-  .article-toc { display: block; }
+  .reader-grid:has(.article-sidebar) { grid-template-columns: minmax(0, 720px) 200px; }
+  .article-sidebar { display: block; }
+  .article-cover-mobile { display: none; }
 }
 
 /* Project */
