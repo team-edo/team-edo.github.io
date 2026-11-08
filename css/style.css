@@ -183,6 +183,11 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--focus); outline
 .article-heading .category:hover { background: var(--lime); color: var(--ink); }
 .article-heading h1 { margin: 14px 0 12px; font-size: 36px; font-weight: 700; line-height: 1.4; letter-spacing: -1.1px; }
 .article-deck { margin: 0 0 18px; color: var(--muted); font-size: 17px; line-height: 1.8; }
+.post-editor { display: grid; gap: 8px; }
+.post-editor input, .post-editor textarea { width: 100%; padding: 10px 12px; border: 1px solid #bcb9b0; border-radius: 6px; color: var(--ink); background: var(--paper); font: inherit; }
+.post-editor textarea { font-family: var(--mono); resize: vertical; }
+.post-editor input:focus-visible, .post-editor textarea:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.post-editor button { justify-self: start; margin-top: 8px; }
 .post-meta { display: flex; flex-wrap: wrap; gap: 8px; font-size: 14px; color: var(--soft); }
 .article-body { font-size: 17px; line-height: 1.95; }
 .article-body > :first-child { margin-top: 0; }
