@@ -4,7 +4,7 @@
   const editor = document.querySelector("[data-editor-api]");
   if (!editor) return;
   const api = new URL(editor.dataset.editorApi.replace(/\/?$/, "/"));
-  const needsPost = editor.dataset.editorWrites === "true";
+  const canEdit = editor.dataset.editorWrites === "true";
   const login = editor.querySelector("[data-editor-login]");
   const form = editor.querySelector("[data-editor-form]");
   const save = form?.querySelector('button[type="submit"]');
@@ -12,7 +12,7 @@
   const back = document.querySelector("[data-editor-back]");
   const query = new URLSearchParams(location.search);
   const storageKey = "team-edo-post-editor";
-  let post = query.get("post");
+  let post = canEdit ? query.get("post") : null;
   let returnPath = query.get("return");
   let session;
   let version;
@@ -105,23 +105,26 @@
         pending = null;
       }
       const callbackMatches = pending && pending.state === query.get("state");
-      post = callbackMatches ? pending.post : null;
+      post = callbackMatches && canEdit ? pending.post : null;
       returnPath = callbackMatches ? pending.returnPath : null;
       const cleanUrl = new URL(location.pathname, location.origin);
       if (post) cleanUrl.searchParams.set("post", post);
       if (returnPath) cleanUrl.searchParams.set("return", returnPath);
       history.replaceState(null, "", cleanUrl);
+      if (post) document.getElementById("editor-title").textContent = "글 수정";
       setBackLink(returnPath);
       if (!callbackMatches || !query.get("code")) {
         setStatus("로그인을 완료하지 못했습니다. GitHub로 다시 로그인해 주세요.");
-        login.hidden = needsPost && !post;
+        login.hidden = false;
         return;
       }
       setStatus("작성자 계정을 확인하고 있습니다.");
       try {
         const result = await call("session", "POST", {post, code: query.get("code"), verifier: pending.verifier});
         if (result.status === "verified") {
-          setStatus("GitHub 작성자 확인이 완료됐습니다. 현재는 계정 확인만 할 수 있습니다.");
+          setStatus(canEdit && !post
+            ? "GitHub 작성자 확인이 완료됐습니다. 수정할 글에서 글 수정 버튼을 눌러 주세요."
+            : "GitHub 작성자 확인이 완료됐습니다. 현재는 계정 확인만 할 수 있습니다.");
           return;
         }
         if (!form || !result.session) throw new Error("작성자 확인 결과를 확인할 수 없습니다.");
@@ -138,9 +141,9 @@
       }
       return;
     }
+    if (post) document.getElementById("editor-title").textContent = "글 수정";
     setBackLink(returnPath);
-    login.hidden = needsPost && !post;
-    if (login.hidden) setStatus("글 상세에서 글 수정 버튼을 눌러 주세요.");
+    login.hidden = false;
   }
 
   void openEditor();
