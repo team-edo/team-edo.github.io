@@ -55,56 +55,31 @@
     controls.hidden = false;
   });
 
-  // 직무별·작성자별로 읽기: 두 조건을 함께 적용해 맞는 글만 보여 주고 결과 수를 알립니다.
+  // 직무를 고르면 해당 분야의 글만 보여 주고 결과 수를 알립니다.
   document.querySelectorAll("[data-journal]").forEach((journal) => {
-    const groups = Array.from(journal.querySelectorAll("[data-filter-group]"));
+    const group = journal.querySelector("[data-filter-group]");
+    if (!group) return;
+    const buttons = Array.from(group.querySelectorAll("[data-value]"));
     const posts = Array.from(journal.querySelectorAll("[data-post]"));
     const empty = journal.querySelector("[data-empty]");
     const result = journal.querySelector("[data-filter-result]");
-    if (!groups.length) return;
-    const selected = Object.fromEntries(groups.map((group) => [group.dataset.filterGroup, "all"]));
-    const matches = (post, key) => {
-      if (selected[key] === "all") return true;
-      // 직무는 여러 개일 수 있어 공백으로 나누고, 작성자는 이름 전체를 비교합니다.
-      return key === "category" ? post.dataset.category.split(" ").includes(selected[key]) : post.dataset[key] === selected[key];
-    };
-    const apply = () => {
+    const all = group.querySelector('[data-value="all"]');
+    const select = (button) => {
+      buttons.forEach((other) => other.setAttribute("aria-pressed", String(other === button)));
       let count = 0;
       posts.forEach((post) => {
-        const visible = Object.keys(selected).every((key) => matches(post, key));
+        const visible = button === all || post.dataset.category.split(" ").includes(button.dataset.value);
         post.hidden = !visible;
         if (visible) count += 1;
       });
-      if (empty) empty.hidden = count > 0;
-      const label = (group) => group.querySelector('[aria-pressed="true"]').firstChild.textContent.trim();
-      // 접힌 토글에서도 지금 고른 항목이 보이도록 제목 옆 표시를 바꿉니다.
-      groups.forEach((group) => {
-        const current = group.closest("details")?.querySelector("[data-filter-current]");
-        if (current) current.textContent = selected[group.dataset.filterGroup] === "all" ? "전체" : label(group);
-      });
-      if (result) {
-        const names = groups.filter((group) => selected[group.dataset.filterGroup] !== "all").map(label);
-        result.textContent = `${names.length ? names.join(" · ") : "전체"} 글 ${count}편`;
-      }
+      empty.hidden = count > 0;
+      result.textContent = `${button.textContent.trim()} 글 ${count}편`;
     };
-    groups.forEach((group) => {
-      const buttons = Array.from(group.querySelectorAll("[data-value]"));
-      buttons.forEach((button) => button.addEventListener("click", () => {
-        buttons.forEach((other) => other.setAttribute("aria-pressed", String(other === button)));
-        selected[group.dataset.filterGroup] = button.dataset.value;
-        apply();
-      }));
+    buttons.forEach((button) => button.addEventListener("click", () => select(button)));
+    journal.querySelector("[data-reset-filter]").addEventListener("click", () => {
+      select(all);
+      all.focus();
     });
-    const reset = journal.querySelector("[data-reset-filter]");
-    if (reset) reset.addEventListener("click", () => {
-      groups.forEach((group) => {
-        group.querySelectorAll("[data-value]").forEach((button) => button.setAttribute("aria-pressed", String(button.dataset.value === "all")));
-        selected[group.dataset.filterGroup] = "all";
-      });
-      apply();
-      // 접혀 있으면 버튼에 초점을 둘 수 없으므로 첫 토글 제목으로 옮깁니다.
-      const first = groups[0].closest("details");
-      (first && !first.open ? first.querySelector("summary") : groups[0].querySelector("[data-value]")).focus();
-    });
+    group.hidden = false;
   });
 })();
