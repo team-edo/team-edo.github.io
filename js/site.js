@@ -55,7 +55,7 @@
     controls.hidden = false;
   });
 
-  // 직무를 고르면 제목과 글 수를 갱신하고 해당 분야의 글만 보여 줍니다.
+  // 분야를 고르면 제목과 글 수를 갱신하고 해당 분야의 글만 보여 줍니다.
   document.querySelectorAll("[data-journal]").forEach((journal) => {
     const group = journal.querySelector("[data-filter-group]");
     if (!group) return;
