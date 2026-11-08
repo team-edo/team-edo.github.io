@@ -23,17 +23,65 @@
     });
   }
 
+  const viewedPost = document.querySelector("[data-view-api]");
+  if (viewedPost) {
+    fetch(viewedPost.dataset.viewApi, {
+      method: "POST", body: viewedPost.dataset.viewPath, credentials: "omit", keepalive: true,
+    }).catch(() => {});
+  }
+
   // 추천 글: 이전·다음 버튼과 좌우 방향키로 넘깁니다. 자동 재생은 하지 않습니다.
   // 모든 글을 같은 칸에 겹쳐 두고 보이기만 바꿔서, 글 길이가 달라도 버튼·이미지 위치가 그대로입니다.
   document.querySelectorAll("[data-spotlight]").forEach((spotlight) => {
     const slides = Array.from(spotlight.querySelectorAll("[data-slide]"));
     const visuals = Array.from(spotlight.querySelectorAll("[data-visual]"));
     const controls = spotlight.querySelector("[data-spot-controls]");
+    let navigated = false;
+    const endpoint = spotlight.dataset.weeklyViews;
+    if (endpoint && slides.length > 1) {
+      fetch(endpoint, { credentials: "omit", signal: AbortSignal.timeout?.(1500) })
+        .then((response) => response.ok ? response.json() : null)
+        .then((views) => {
+          if (!views || navigated || spotlight.contains(document.activeElement)) return;
+
+          const posts = Array.from(document.querySelectorAll("[data-journal] .post-link"));
+          const count = (post) => {
+            const score = views[post.getAttribute("href")];
+            return Number.isSafeInteger(score) && score > 0 ? score : 0;
+          };
+          // Stable sort keeps the existing latest-first order for ties and unread posts.
+          posts.sort((first, second) => count(second) - count(first));
+          posts.slice(0, slides.length).forEach((post, index) => {
+            const slide = slides[index];
+            const visual = visuals[index];
+            const link = slide.querySelector("h2 a");
+            const href = post.getAttribute("href");
+            if (link.getAttribute("href") === href) return;
+
+            link.setAttribute("href", href);
+            link.textContent = post.querySelector("h3").textContent;
+            slide.querySelector("p").textContent = post.querySelector(".post-copy p").textContent;
+            const category = slide.querySelector(".category");
+            category.textContent = post.closest("[data-post]").dataset.spotCategory;
+            category.hidden = !category.textContent;
+
+            const thumb = post.querySelector(".thumb").cloneNode(true);
+            thumb.classList.add("thumb-large");
+            const image = thumb.querySelector("img");
+            if (image && index === 0) image.loading = "eager";
+            visual.setAttribute("href", href);
+            visual.replaceChildren(thumb);
+          });
+        })
+        .catch(() => {});
+    }
+
     if (slides.length < 2 || !controls) return;
     const counter = controls.querySelector("[data-spot-counter]");
     const pad = (value) => String(value).padStart(2, "0");
     let current = 0;
     const show = (index) => {
+      navigated = true;
       current = (index + slides.length) % slides.length;
       slides.forEach((slide, position) => {
         const off = position !== current;
