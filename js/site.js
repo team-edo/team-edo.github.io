@@ -55,14 +55,16 @@
     controls.hidden = false;
   });
 
-  // 직무를 고르면 해당 분야의 글만 보여 주고 결과 수를 알립니다.
+  // 직무를 고르면 제목과 글 수를 갱신하고 해당 분야의 글만 보여 줍니다.
   document.querySelectorAll("[data-journal]").forEach((journal) => {
     const group = journal.querySelector("[data-filter-group]");
     if (!group) return;
     const buttons = Array.from(group.querySelectorAll("[data-value]"));
     const posts = Array.from(journal.querySelectorAll("[data-post]"));
     const empty = journal.querySelector("[data-empty]");
-    const result = journal.querySelector("[data-filter-result]");
+    const title = journal.querySelector("#all-title");
+    const defaultTitle = title.textContent;
+    const countLabel = journal.querySelector("[data-filter-result]");
     const all = group.querySelector('[data-value="all"]');
     const select = (button) => {
       buttons.forEach((other) => other.setAttribute("aria-pressed", String(other === button)));
@@ -73,7 +75,8 @@
         if (visible) count += 1;
       });
       empty.hidden = count > 0;
-      result.textContent = `${button.textContent.trim()} 글 ${count}편`;
+      title.textContent = button === all ? defaultTitle : button.textContent.trim();
+      countLabel.textContent = `${count}편`;
     };
     buttons.forEach((button) => button.addEventListener("click", () => select(button)));
     journal.querySelector("[data-reset-filter]").addEventListener("click", () => {
