@@ -134,6 +134,10 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--focus); outline
 .journal-heading { display: flex; align-items: baseline; gap: 12px; min-width: 0; }
 .article-header h2 { margin: 0; font-size: 27px; font-weight: 700; letter-spacing: -.8px; }
 .filter-count { font-size: 13px; color: var(--muted); white-space: nowrap; }
+.journal-search { max-width: 26rem; margin: 8px 0 4px; }
+.journal-search label { display: block; margin-bottom: 4px; font-size: 14px; font-weight: 600; }
+.journal-search input { width: 100%; min-height: 44px; padding: 6px 12px; border: 1px solid var(--muted); border-radius: 7px; background: var(--paper); color: var(--ink); font: inherit; font-size: 16px; }
+.journal-search input:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
 .post-item { border-bottom: 1px solid var(--line); }
 .post-link { display: flex; align-items: center; gap: 28px; padding: 29px 0; }
 .post-copy { flex: 1; min-width: 0; }

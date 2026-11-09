@@ -103,34 +103,56 @@
     controls.hidden = false;
   });
 
-  // 분야를 고르면 제목과 글 수를 갱신하고 해당 분야의 글만 보여 줍니다.
+  // 제목·태그 검색과 분야 필터를 함께 적용합니다.
   document.querySelectorAll("[data-journal]").forEach((journal) => {
     const group = journal.querySelector("[data-filter-group]");
     if (!group) return;
     const buttons = Array.from(group.querySelectorAll("[data-value]"));
-    const posts = Array.from(journal.querySelectorAll("[data-post]"));
+    const search = journal.querySelector("[data-post-search]");
+    const input = search.querySelector("input");
+    const normalize = (text) => text.normalize("NFC").toLowerCase();
+    const posts = Array.from(journal.querySelectorAll("[data-post]"), (post) => ({
+      post, categories: post.dataset.category.split(" "), keywords: normalize(post.dataset.search),
+    }));
     const empty = journal.querySelector("[data-empty]");
+    const emptyMessage = empty.querySelector("[data-empty-message]");
     const title = journal.querySelector("#all-title");
     const defaultTitle = title.textContent;
     const countLabel = journal.querySelector("[data-filter-result]");
     const all = group.querySelector('[data-value="all"]');
-    const select = (button) => {
-      buttons.forEach((other) => other.setAttribute("aria-pressed", String(other === button)));
+    let selected = all;
+    const showResults = () => {
+      const terms = normalize(input.value.trim()).split(/\s+/).filter(Boolean);
       let count = 0;
-      posts.forEach((post) => {
-        const visible = button === all || post.dataset.category.split(" ").includes(button.dataset.value);
+      posts.forEach(({post, categories, keywords}) => {
+        const inCategory = selected === all || categories.includes(selected.dataset.value);
+        const visible = inCategory && terms.every((term) => keywords.includes(term));
         post.hidden = !visible;
         if (visible) count += 1;
       });
       empty.hidden = count > 0;
-      title.textContent = button === all ? defaultTitle : button.textContent.trim();
-      countLabel.textContent = `${count}편`;
+      emptyMessage.textContent = terms.length ? "검색 조건에 맞는 글이 없어요." : "이 분야의 글을 준비하고 있어요.";
+      const label = `${count}편`;
+      if (countLabel.textContent !== label) countLabel.textContent = label;
     };
+    const select = (button) => {
+      selected = button;
+      buttons.forEach((other) => other.setAttribute("aria-pressed", String(other === button)));
+      title.textContent = button === all ? defaultTitle : button.textContent.trim();
+      showResults();
+    };
+    input.addEventListener("input", (event) => {
+      if (!event.isComposing) showResults();
+    });
+    input.addEventListener("compositionend", showResults);
     buttons.forEach((button) => button.addEventListener("click", () => select(button)));
     journal.querySelector("[data-reset-filter]").addEventListener("click", () => {
+      input.value = "";
       select(all);
       all.focus();
     });
     group.hidden = false;
+    search.hidden = false;
+    showResults();
   });
 })();
