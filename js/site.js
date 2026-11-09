@@ -124,7 +124,6 @@
     const pageNumbers = pagination.querySelector("[data-page-numbers]");
     const jumpControl = pagination.querySelector("[data-page-jump-form]");
     const pageJump = jumpControl.querySelector("input");
-    const pageTotal = jumpControl.querySelector("[data-page-total]");
     const pageStatus = pagination.querySelector("[data-page-status]");
     const normalize = (text) => text.normalize("NFC").toLowerCase();
     const posts = Array.from(journal.querySelectorAll("[data-post]"), (post) => ({
@@ -152,17 +151,18 @@
           gap.textContent = "…";
           items.push(gap);
         }
+        const button = document.createElement("button");
+        button.type = "button";
+        button.textContent = String(number);
+        button.classList.toggle("journal-page-neighbor", Math.abs(number - page) === 1);
+        button.setAttribute("aria-label", `${number} 페이지`);
         if (number === page) {
-          items.push(jumpControl);
+          button.disabled = true;
+          button.setAttribute("aria-current", "page");
         } else {
-          const button = document.createElement("button");
-          button.type = "button";
-          button.textContent = String(number);
-          button.classList.toggle("journal-page-neighbor", Math.abs(number - page) === 1);
-          button.setAttribute("aria-label", `${number} 페이지`);
           button.addEventListener("click", () => goToPage(number));
-          items.push(button);
         }
+        items.push(button);
         lastNumber = number;
       }
       pageNumbers.replaceChildren(...items);
@@ -186,8 +186,7 @@
       pagination.hidden = pages <= 1;
       if (pages > 1) {
         pageJump.max = String(pages);
-        pageJump.value = String(page);
-        pageTotal.textContent = `/ ${pages}`;
+        pageJump.value = "";
       }
       previous.disabled = page === 1;
       next.disabled = page >= pages;
