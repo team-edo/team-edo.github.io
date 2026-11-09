@@ -23,6 +23,12 @@
     });
   }
 
+  const backToTop = document.querySelector("[data-back-to-top]");
+  if (backToTop) {
+    const top = document.getElementById("page-top");
+    new IntersectionObserver(([entry]) => { backToTop.hidden = entry.isIntersecting; }).observe(top);
+  }
+
   const viewedPost = document.querySelector("[data-view-api]");
   if (viewedPost) {
     fetch(viewedPost.dataset.viewApi, {
@@ -141,6 +147,10 @@
       title.textContent = button === all ? defaultTitle : button.textContent.trim();
       showResults();
     };
+    search.addEventListener("submit", (event) => {
+      event.preventDefault();
+      showResults();
+    });
     input.addEventListener("input", (event) => {
       if (!event.isComposing) showResults();
     });
