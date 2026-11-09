@@ -27,7 +27,7 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--focus); outline
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 .skip-link { position: absolute; left: 20px; top: -80px; z-index: 20; padding: 12px; background: #fff; border: 1px solid var(--line); }
 .skip-link:focus { top: 10px; }
-.back-to-top { position: fixed; z-index: 5; inset-inline-start: max(16px, env(safe-area-inset-left)); inset-block-end: max(16px, env(safe-area-inset-bottom)); display: grid; place-items: center; width: 44px; height: 44px; border: 1px solid #c7c9bc; border-radius: 50%; background: var(--paper); color: var(--lime-ink); box-shadow: 0 3px 12px #27221e1a; }
+.back-to-top { --top-button-inset: clamp(20px, 2.3vw, 28px); position: fixed; z-index: 5; inset-inline-start: calc(var(--top-button-inset) + env(safe-area-inset-left)); inset-block-end: calc(var(--top-button-inset) + env(safe-area-inset-bottom)); display: grid; place-items: center; width: 44px; height: 44px; border: 1px solid #c7c9bc; border-radius: 50%; background: var(--paper); color: var(--lime-ink); box-shadow: 0 3px 12px #27221e1a; }
 .back-to-top:hover { border-color: var(--lime-ink); background: var(--lime-tint); }
 .wrap { max-width: 1240px; margin: 0 auto; padding: 0 32px; }
 .kicker { font-size: 12px; letter-spacing: 1.8px; color: var(--muted); font-weight: 500; }
@@ -137,15 +137,15 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--focus); outline
 .article-header h2 { margin: 0; font-size: 27px; font-weight: 700; letter-spacing: -.8px; }
 .filter-count { font-size: 13px; color: var(--muted); white-space: nowrap; }
 .journal-search { display: flex; flex: 1 1 16rem; gap: 8px; max-width: 22rem; margin-inline-start: auto; }
-.journal-search input { flex: 1 1 auto; min-width: 0; min-height: 44px; padding: 6px 12px; border: 1px solid var(--muted); border-radius: 7px; background: var(--paper); color: var(--ink); font: inherit; font-size: 16px; }
+.journal-search input, .journal-search .button-primary { min-height: 40px; padding-block: 5px; }
+.journal-search input { flex: 1 1 auto; min-width: 0; padding-inline: 12px; border: 0; border-radius: 7px; background: var(--code-bg); color: var(--ink); font: inherit; font-size: 16px; }
 .journal-search .button-primary { padding-inline: 16px; background: var(--lime-tint); color: var(--lime-ink); white-space: nowrap; }
 .journal-search .button-primary:hover { background: var(--lime); color: var(--ink); }
 .journal-search input:focus-visible, .journal-search button:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
 .post-item { border-bottom: 1px solid var(--line); }
 .post-link { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 8px 28px; padding: 26px 0 13px; }
 .post-copy { min-width: 0; }
-.post-card-meta { display: flex; flex-wrap: wrap; align-items: center; column-gap: 10px; }
-.post-card-meta .post-meta { margin-inline-start: auto; color: #777671; }
+.post-copy > .post-meta { justify-content: flex-start; margin-top: 6px; color: #777671; }
 .post-item h3 { margin: 11px 0 9px; font-size: 23px; font-weight: 600; line-height: 1.5; letter-spacing: -.65px; }
 .post-link:hover h3 { text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
 .post-item p { margin: 0; color: var(--muted); font-size: 15px; line-height: 1.85; }
@@ -367,6 +367,7 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--focus); outline
   .journal-sidebar { display: none; }
   .journal-main { grid-column: 1; }
   .journal-search { flex-basis: 100%; max-width: none; margin-inline-start: 0; }
+  .journal-search input, .journal-search .button-primary { min-height: 44px; }
   .spotlight { gap: 24px; }
   .spot-copy h2 { font-size: 30px; }
   .spot-copy p { font-size: 15px; }
@@ -411,7 +412,7 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--focus); outline
   .post-item h3 { margin: 10px 0 8px; font-size: 20px; letter-spacing: -.5px; }
   .post-item p { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; font-size: 14px; line-height: 1.8; }
   .post-item .meta { gap: 6px; font-size: 12px; }
-  .post-card-meta .post-meta { gap: 0 6px; font-size: 12px; }
+  .post-copy > .post-meta { gap: 0 6px; font-size: 12px; }
   .post-item .category { padding: 2px 5px; font-size: 11px; letter-spacing: 0; }
   .thumb:not(.thumb-large) { width: 80px; height: 94px; border-radius: 9px; }
   .thumb:not(.thumb-large) .art-branch, .thumb:not(.thumb-large) .art-code, .thumb:not(.thumb-large) .art-wave, .thumb:not(.thumb-large) .art-notes { transform: scale(.72); }
