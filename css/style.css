@@ -189,6 +189,12 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--focus); outline
 .article-heading .category:hover { background: var(--lime); color: var(--ink); }
 .article-heading h1 { margin: 14px 0 12px; font-size: 36px; font-weight: 700; line-height: 1.4; letter-spacing: -1.1px; }
 .article-deck { margin: 0 0 18px; color: var(--muted); font-size: 17px; line-height: 1.8; }
+.article-intro { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 24px; }
+.article-intro .article-deck { flex: 1 1 24rem; min-width: 0; margin: 0; }
+.article-intro .post-meta { margin-inline-start: auto; justify-content: flex-end; }
+.article-intro time { white-space: nowrap; }
+.article-actions { display: flex; justify-content: flex-end; margin-top: 24px; font-size: 14px; }
+.article-actions .quiet { display: inline-flex; align-items: center; min-height: 44px; padding-inline: 8px; }
 .post-editor { display: grid; gap: 8px; }
 .post-editor input, .post-editor textarea { width: 100%; padding: 10px 12px; border: 1px solid #bcb9b0; border-radius: 6px; color: var(--ink); background: var(--paper); font: inherit; }
 .post-editor textarea { font-family: var(--mono); resize: vertical; }
