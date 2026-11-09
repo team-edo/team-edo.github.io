@@ -111,8 +111,9 @@
 
   // 제목·태그와 분야에 맞는 결과만 페이지로 나눕니다.
   document.querySelectorAll("[data-journal]").forEach((journal) => {
-    const group = journal.querySelector("[data-filter-group]");
-    if (!group) return;
+    const controls = journal.querySelector("[data-journal-controls]");
+    if (!controls) return;
+    const group = controls.querySelector("[data-filter-group]");
     const buttons = Array.from(group.querySelectorAll("[data-value]"));
     const search = journal.querySelector("[data-post-search]");
     const input = search.querySelector("input");
@@ -120,6 +121,9 @@
     const pagination = journal.querySelector("[data-pagination]");
     const previous = pagination.querySelector("[data-page-prev]");
     const next = pagination.querySelector("[data-page-next]");
+    const pageNumbers = pagination.querySelector("[data-page-numbers]");
+    const pageJump = pagination.querySelector("[data-page-jump]");
+    const jumpControl = pageJump.closest("label");
     const pageStatus = pagination.querySelector("[data-page-status]");
     const normalize = (text) => text.normalize("NFC").toLowerCase();
     const posts = Array.from(journal.querySelectorAll("[data-post]"), (post) => ({
@@ -133,6 +137,41 @@
     const all = group.querySelector('[data-value="all"]');
     let selected = all;
     let page = 1;
+    const renderPageNumbers = (pages) => {
+      pageJump.replaceChildren(...Array.from({ length: pages }, (_, index) => {
+        const number = index + 1;
+        const label = number === page ? `${page} / ${pages}` : `${number} 페이지`;
+        return new Option(label, number);
+      }));
+      pageJump.value = String(page);
+
+      // 양끝과 현재 페이지 주변 세 페이지를 번호로 표시합니다.
+      const start = Math.max(1, Math.min(page - 1, pages - 2));
+      const items = [];
+      let lastNumber = 0;
+      for (let number = 1; number <= pages; number += 1) {
+        if (number !== 1 && number !== pages && (number < start || number > start + 2)) continue;
+        if (number - lastNumber > 1) {
+          const gap = document.createElement("span");
+          gap.className = "journal-page-gap";
+          gap.setAttribute("aria-hidden", "true");
+          gap.textContent = "…";
+          items.push(gap);
+        }
+        if (number === page) {
+          items.push(jumpControl);
+        } else {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.textContent = String(number);
+          button.setAttribute("aria-label", `${number} 페이지`);
+          button.addEventListener("click", () => goToPage(number));
+          items.push(button);
+        }
+        lastNumber = number;
+      }
+      pageNumbers.replaceChildren(...items);
+    };
     const showResults = () => {
       const terms = normalize(input.value.trim()).split(/\s+/).filter(Boolean);
       const size = pageSize.value === "all" ? posts.length : Number(pageSize.value);
@@ -153,14 +192,17 @@
       previous.disabled = page === 1;
       next.disabled = page >= pages;
       const status = pages > 1 ? `${page} / ${pages} 페이지` : "";
-      if (pageStatus.textContent !== status) pageStatus.textContent = status;
+      if (pageStatus.textContent !== status) {
+        if (pages > 1) renderPageNumbers(pages);
+        pageStatus.textContent = status;
+      }
     };
     const resetPage = () => {
       page = 1;
       showResults();
     };
-    const changePage = (offset) => {
-      page += offset;
+    const goToPage = (number) => {
+      page = number;
       showResults();
       title.focus({ preventScroll: true });
       title.closest(".article-header").scrollIntoView({ behavior: "instant", block: "start" });
@@ -180,16 +222,16 @@
     });
     input.addEventListener("compositionend", resetPage);
     pageSize.addEventListener("change", resetPage);
-    previous.addEventListener("click", () => changePage(-1));
-    next.addEventListener("click", () => changePage(1));
+    previous.addEventListener("click", () => goToPage(page - 1));
+    next.addEventListener("click", () => goToPage(page + 1));
+    pageJump.addEventListener("change", () => goToPage(Number(pageJump.value)));
     buttons.forEach((button) => button.addEventListener("click", () => select(button)));
     journal.querySelector("[data-reset-filter]").addEventListener("click", () => {
       input.value = "";
       select(all);
       all.focus();
     });
-    group.hidden = false;
-    pageSize.closest("label").hidden = false;
+    controls.hidden = false;
     search.hidden = false;
     showResults();
   });
