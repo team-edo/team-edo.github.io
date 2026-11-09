@@ -1,4 +1,24 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>통합 테스트 on 얼쑤 · Team Edo</title><link>https://team-edo.github.io/tags/%ED%86%B5%ED%95%A9-%ED%85%8C%EC%8A%A4%ED%8A%B8/</link><description>Recent content in 통합 테스트 on 얼쑤 · Team Edo</description><generator>Hugo</generator><language>ko-kr</language><lastBuildDate>Sun, 08 Nov 2026 00:00:00 +0900</lastBuildDate><atom:link href="https://team-edo.github.io/tags/%ED%86%B5%ED%95%A9-%ED%85%8C%EC%8A%A4%ED%8A%B8/index.xml" rel="self" type="application/rss+xml"/><item><title>Spring 테스트 53개 실패와 MySQL 연결 한도</title><link>https://team-edo.github.io/posts/2026/11/spring-test-mysql-connections/</link><pubDate>Sun, 08 Nov 2026 00:00:00 +0900</pubDate><guid>https://team-edo.github.io/posts/2026/11/spring-test-mysql-connections/</guid><description>&lt;p>얼쑤 백엔드의 &lt;code>databaseTest&lt;/code>는 Spring 애플리케이션과 실제 MySQL을 연결해 실행하는 통합 테스트입니다. 앞선 실행에서 161개가 모두 통과했는데, 다른 변경을 병합한 뒤에는 174개 중 53개가 실패했습니다. 서로 다른 기능을 확인하는 테스트에서 같은 메시지가 45번 나왔습니다. &lt;code>Too many connections&lt;/code>였습니다.&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>통합 테스트 on 얼쑤 · Team Edo</title><link>https://team-edo.github.io/tags/%ED%86%B5%ED%95%A9-%ED%85%8C%EC%8A%A4%ED%8A%B8/</link><description>Recent content in 통합 테스트 on 얼쑤 · Team Edo</description><generator>Hugo</generator><language>ko-kr</language><lastBuildDate>Mon, 09 Nov 2026 00:00:00 +0900</lastBuildDate><atom:link href="https://team-edo.github.io/tags/%ED%86%B5%ED%95%A9-%ED%85%8C%EC%8A%A4%ED%8A%B8/index.xml" rel="self" type="application/rss+xml"/><item><title>폐기용 MySQL을 실행 단위로 분리한 이유</title><link>https://team-edo.github.io/posts/2026/11/isolate-disposable-mysql-tests/</link><pubDate>Mon, 09 Nov 2026 00:00:00 +0900</pubDate><guid>https://team-edo.github.io/posts/2026/11/isolate-disposable-mysql-tests/</guid><description>&lt;p>MySQL 통합 테스트는 실제 스키마를 만들고 데이터를 씁니다. 같은 데이터베이스와 계정을 다음 실행에 재사용하면 앞선 실행이 남긴 데이터가 새 결과에 영향을 줄 수 있습니다. 얼쑤에서는 실행마다 테스트 DB와 전용 계정을 만들고, 다른 DB에서 쓰는 접속 정보와 분리했습니다. 서버의 기동 조건이나 연결 한도를 시험할 때는 MySQL 인스턴스도 따로 띄웠습니다.&lt;/p>
+&lt;h2 id="어디까지-분리할까">어디까지 분리할까&lt;/h2>
+&lt;table>
+ &lt;thead>
+ &lt;tr>
+ &lt;th>시험에서 바꾸는 것&lt;/th>
+ &lt;th>실행마다 분리할 대상&lt;/th>
+ &lt;/tr>
+ &lt;/thead>
+ &lt;tbody>
+ &lt;tr>
+ &lt;td>테이블, 테스트 데이터, 스키마 변경&lt;/td>
+ &lt;td>데이터베이스와 해당 DB에만 접근하는 전용 계정&lt;/td>
+ &lt;/tr>
+ &lt;tr>
+ &lt;td>기동 옵션, 최대 연결 수&lt;/td>
+ &lt;td>MySQL 인스턴스, 데이터 폴더, 접속 주소&lt;/td>
+ &lt;/tr>
+ &lt;/tbody>
+&lt;/table>
+&lt;p>Gradle의 통합 테스트에는 &lt;code>TEST_DB_URL&lt;/code>, &lt;code>TEST_DB_USERNAME&lt;/code>, &lt;code>TEST_DB_PASSWORD&lt;/code>를 그 실행에만 전달했습니다. 새 계정은 시험에 필요한 권한을 받고, 데이터 쓰기 권한은 해당 DB에 한정했습니다. 실패한 실행도 정리할 수 있게 종료 절차를 테스트의 성공 여부와 분리했습니다.&lt;/p></description></item><item><title>Spring 테스트 53개 실패와 MySQL 연결 한도</title><link>https://team-edo.github.io/posts/2026/11/spring-test-mysql-connections/</link><pubDate>Sun, 08 Nov 2026 00:00:00 +0900</pubDate><guid>https://team-edo.github.io/posts/2026/11/spring-test-mysql-connections/</guid><description>&lt;p>얼쑤 백엔드의 &lt;code>databaseTest&lt;/code>는 Spring 애플리케이션과 실제 MySQL을 연결해 실행하는 통합 테스트입니다. 앞선 실행에서 161개가 모두 통과했는데, 다른 변경을 병합한 뒤에는 174개 중 53개가 실패했습니다. 서로 다른 기능을 확인하는 테스트에서 같은 메시지가 45번 나왔습니다. &lt;code>Too many connections&lt;/code>였습니다.&lt;/p>
 &lt;h2 id="실패한-테스트보다-먼저-연결을-확인했다">테스트보다 먼저 연결 확인&lt;/h2>
 &lt;p>Spring 테스트가 애플리케이션 컨텍스트를 올리는 도중 DB에 연결하지 못하면 테스트 코드까지 실행되지 못합니다. 같은 설정의 컨텍스트를 여는 데 이미 실패한 뒤에는 Spring이 다음 로딩 시도를 건너뛰면서 &lt;code>ApplicationContext failure threshold exceeded&lt;/code>를 남길 수 있습니다. 이 메시지만 보면 원인이 비슷한 실패가 여러 개 생긴 것처럼 보입니다. 앞선 로딩 실패의 예외까지 내려가면 MySQL이 새 연결을 거부했다는 단서가 나옵니다. &lt;a href="https://docs.spring.io/spring-framework/reference/testing/testcontext-framework/ctx-management/failure-threshold.html">Spring의 컨텍스트 로딩 실패 정책&lt;/a> · &lt;a href="https://dev.mysql.com/doc/refman/8.4/en/too-many-connections.html">MySQL의 연결 초과 오류&lt;/a>&lt;/p></description></item><item><title>MySQL 행 잠금 대기로 요청 경합 확인</title><link>https://team-edo.github.io/posts/2026/11/test-observed-mysql-row-lock/</link><pubDate>Mon, 02 Nov 2026 00:00:00 +0900</pubDate><guid>https://team-edo.github.io/posts/2026/11/test-observed-mysql-row-lock/</guid><description>&lt;p>연습 기록을 저장하는 요청은 세션을 읽고 값을 갱신한 뒤 응답에 넣을 행을 다시 읽습니다. 그 사이 같은 기록을 삭제하면 마지막 조회가 대상을 잃을 수 있습니다. 저장이 끝날 때까지 삭제가 기다리도록 저장 트랜잭션에서 세션 행을 &lt;code>SELECT … FOR UPDATE&lt;/code>로 잠갔습니다.&lt;/p>
 &lt;p>두 작업을 서로 다른 스레드에서 출발시키는 것만으로는 이 잠금을 검사하기 어렵습니다. 스케줄링에 따라 삭제 요청이 저장보다 늦게 시작하면 두 작업이 실제로 겹치지 않습니다. 일정 시간 멈춘 뒤 삭제가 아직 끝나지 않았다고 단언해도, 삭제 스레드가 DB에 도달했는지 알 수 없습니다.&lt;/p></description></item><item><title>녹음 재생 API가 내부 주소를 반환한 이유</title><link>https://team-edo.github.io/posts/2026/11/playback-url-store-boundary/</link><pubDate>Mon, 02 Nov 2026 00:00:00 +0900</pubDate><guid>https://team-edo.github.io/posts/2026/11/playback-url-store-boundary/</guid><description>&lt;p>얼쑤의 녹음 다시 듣기 API에 기존 저장소의 읽기 주소 발급 기능을 연결했습니다. 로컬 저장소에서는 분석 컨테이너가 쓰는 내부 주소가 HTTP 200 응답에 들어왔습니다. 테스트는 그 주소의 호스트를 테스트 프로세스가 접근할 수 있는 주소로 바꿔 읽었기 때문에 성공했습니다. 휴대폰은 응답에 들어 있는 주소 그대로 접속하므로 같은 결과를 기대할 수 없었습니다.&lt;/p>

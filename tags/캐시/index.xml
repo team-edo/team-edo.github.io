@@ -1,4 +1,25 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>캐시 on 얼쑤 · Team Edo</title><link>https://team-edo.github.io/tags/%EC%BA%90%EC%8B%9C/</link><description>Recent content in 캐시 on 얼쑤 · Team Edo</description><generator>Hugo</generator><language>ko-kr</language><lastBuildDate>Mon, 02 Nov 2026 00:00:00 +0900</lastBuildDate><atom:link href="https://team-edo.github.io/tags/%EC%BA%90%EC%8B%9C/index.xml" rel="self" type="application/rss+xml"/><item><title>없는 행과 NULL 값 구분하기</title><link>https://team-edo.github.io/posts/2026/11/preserve-empty-record-and-cache-results/</link><pubDate>Mon, 02 Nov 2026 00:00:00 +0900</pubDate><guid>https://team-edo.github.io/posts/2026/11/preserve-empty-record-and-cache-results/</guid><description>&lt;p>얼쑤는 녹음 파일이 없어도 연습 기록을 저장할 수 있습니다. 또 저장 뒤 악보 버전이 바뀌면 기록은 남지만 현재 악보에서 어느 칸에 해당하는지 표시하지 않습니다. 연습 기록 API를 만들면서 이렇게 값이 비는 경우를 두 곳에서 따로 처리했습니다. SQL을 읽는 매퍼와 한 요청 안에서 조회를 줄이는 캐시였습니다.&lt;/p>
+&lt;table>
+ &lt;thead>
+ &lt;tr>
+ &lt;th>구분할 곳&lt;/th>
+ &lt;th>항목이 없음&lt;/th>
+ &lt;th>항목이 있고 값이 비어 있음&lt;/th>
+ &lt;/tr>
+ &lt;/thead>
+ &lt;tbody>
+ &lt;tr>
+ &lt;td>DB 조회&lt;/td>
+ &lt;td>지울 세션이 없습니다.&lt;/td>
+ &lt;td>세션은 지울 수 있고 녹음 파일은 없습니다.&lt;/td>
+ &lt;/tr>
+ &lt;tr>
+ &lt;td>요청 안의 캐시&lt;/td>
+ &lt;td>악보 위치를 아직 조회하지 않았습니다.&lt;/td>
+ &lt;td>이미 조회했고 현재 악보에서 표시할 위치가 없습니다.&lt;/td>
+ &lt;/tr>
+ &lt;/tbody>
+&lt;/table>
 &lt;h2 id="녹음-파일이-없어도-지울-기록은-있다">녹음 없이도 남는 삭제 대상&lt;/h2>
 &lt;p>삭제 API는 먼저 사용자가 지울 수 있는 기록인지 찾고, 녹음 경로가 있으면 파일 삭제도 처리합니다. 이때 &lt;code>recording_url&lt;/code>만 조회하면 MyBatis의 기본 설정에서는 조회한 열이 전부 NULL인 행이 &lt;code>null&lt;/code>로 반환됩니다. 결과만 보면 행이 없었는지, 행은 있는데 녹음 경로만 비었는지 구분할 수 없습니다.&lt;/p></description></item><item><title>JDBC로 바꾼 값을 MyBatis가 다시 읽지 못한 이유</title><link>https://team-edo.github.io/posts/2026/10/mybatis-session-cache-in-db-tests/</link><pubDate>Wed, 28 Oct 2026 00:00:00 +0900</pubDate><guid>https://team-edo.github.io/posts/2026/10/mybatis-session-cache-in-db-tests/</guid><description>&lt;p>연습 세션에 분석 시도 번호와 시작 시각을 추가할 때 두 가지를 확인하려고 했습니다. 기존 행을 조회하면 새 필드에 기본값이 들어가야 하고, 값을 채운 행을 조회하면 매퍼가 새 필드를 올바르게 읽어야 했습니다. 처음에는 테스트 행 하나로 두 가지를 검사했습니다. MyBatis로 먼저 읽고 &lt;code>JdbcTemplate&lt;/code>로 값을 바꾼 뒤 같은 매퍼에서 다시 읽었습니다. 두 번째 조회에는 변경 전 시도 번호가 남아 있었습니다.&lt;/p>
 &lt;h2 id="같은-sql을-다시-불러도-db까지-가지-않을-수-있다">세션 캐시가 재조회를 가로막은 이유&lt;/h2>
