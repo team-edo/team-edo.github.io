@@ -139,12 +139,12 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--focus); outline
 .journal-search input { width: 100%; min-height: 44px; padding: 6px 12px; border: 1px solid var(--muted); border-radius: 7px; background: var(--paper); color: var(--ink); font: inherit; font-size: 16px; }
 .journal-search input:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
 .post-item { border-bottom: 1px solid var(--line); }
-.post-link { display: flex; align-items: center; gap: 28px; padding: 29px 0; }
-.post-copy { flex: 1; min-width: 0; }
+.post-link { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 8px 28px; padding: 24px 0 8px; }
+.post-copy { min-width: 0; }
+.post-link > .post-meta { grid-column: 1 / -1; }
 .post-item h3 { margin: 11px 0 9px; font-size: 23px; font-weight: 600; line-height: 1.5; letter-spacing: -.65px; }
 .post-link:hover h3 { text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
 .post-item p { margin: 0; color: var(--muted); font-size: 15px; line-height: 1.85; }
-.byline { margin-top: 14px; font-size: 13px; color: var(--soft); }
 .side-block { margin-bottom: 26px; padding: 22px 18px; border-radius: 12px; background: #f7f8f5; }
 .side-block h2 { margin: 0 9px 17px; font-size: 18px; font-weight: 600; line-height: 1.5; }
 .filters { display: flex; flex-wrap: wrap; gap: 6px; min-width: 0; }
@@ -157,12 +157,13 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--focus); outline
 .reading h2 { margin-left: 0; }
 .reading ol { list-style: none; margin: 0; padding: 0; }
 .reading li + li { border-top: 1px solid var(--line); }
-.reading a { display: flex; gap: 10px; padding: 14px 0; font-size: 15px; line-height: 1.65; }
+.reading a { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 10px; padding: 14px 0 8px; font-size: 15px; line-height: 1.65; }
 .reading a:hover strong { text-decoration: underline; text-underline-offset: 3px; }
 .reading b { min-width: 20px; padding-top: 1px; font-size: 13px; color: #627010; }
-.reading a > span { min-width: 0; }
 .reading strong { font-weight: 500; line-height: 1.7; }
-.reading small { display: block; margin-top: 6px; font-size: 13px; color: var(--muted); }
+.reading-meta { grid-column: 2; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; }
+.reading-meta small { font-size: 13px; color: var(--muted); }
+.reading-meta .post-meta { margin-inline-start: auto; }
 .mini-project { overflow: hidden; padding: 24px 8px; border-top: 1px solid var(--line); }
 .mini-project img { float: right; width: 72px; height: 88px; object-fit: contain; }
 .mini-project .kicker { font-size: 12px; }
@@ -193,10 +194,9 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--focus); outline
 .article-heading .category:hover { background: var(--lime); color: var(--ink); }
 .article-heading h1 { margin: 14px 0 12px; font-size: 36px; font-weight: 700; line-height: 1.4; letter-spacing: -1.1px; }
 .article-deck { margin: 0 0 18px; color: var(--muted); font-size: 17px; line-height: 1.8; }
-.article-intro { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 24px; }
-.article-intro .article-deck { flex: 1 1 24rem; min-width: 0; margin: 0; }
-.article-intro .post-meta { margin-inline-start: auto; justify-content: flex-end; }
-.article-intro time { white-space: nowrap; }
+.article-heading.post-heading { padding-bottom: 8px; }
+.post-heading .article-deck { margin-bottom: 8px; }
+.post-heading .post-meta { font-size: 14px; }
 .article-actions { display: flex; justify-content: flex-end; margin-top: 24px; font-size: 14px; }
 .article-actions .quiet { display: inline-flex; align-items: center; min-height: 44px; padding-inline: 8px; }
 .post-editor { display: grid; gap: 8px; }
@@ -204,7 +204,8 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--focus); outline
 .post-editor textarea { font-family: var(--mono); resize: vertical; }
 .post-editor input:focus-visible, .post-editor textarea:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
 .post-editor button { justify-self: start; margin-top: 8px; }
-.post-meta { display: flex; flex-wrap: wrap; gap: 8px; font-size: 14px; color: var(--soft); }
+.post-meta { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: baseline; gap: 0 8px; font-size: 13px; color: var(--soft); }
+.post-meta time { white-space: nowrap; }
 .article-body { font-size: 17px; line-height: 1.95; }
 .article-body > :first-child { margin-top: 0; }
 .article-body h2 { margin: 2.4em 0 .9em; font-size: 25px; font-weight: 700; line-height: 1.45; letter-spacing: -.6px; }
@@ -325,7 +326,7 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--focus); outline
   .spot-copy h2 { font-size: 32px; }
   .spot-visual { height: 260px; }
   .post-item h3 { font-size: 21px; }
-  .post-link { gap: 22px; }
+  .post-link { column-gap: 22px; }
   .thumb:not(.thumb-large) { width: 116px; height: 104px; }
   .side-block h2 { font-size: 17px; }
   .reading a { font-size: 14px; }
@@ -399,12 +400,11 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--focus); outline
   .journal-layout { padding: 12px 0 35px; }
   .article-header { padding: 4px 0 9px; }
   .article-header h2 { font-size: 25px; }
-  .post-link { gap: 16px; padding: 25px 0; }
+  .post-link { column-gap: 16px; padding-top: 20px; }
   .post-item h3 { margin: 10px 0 8px; font-size: 20px; letter-spacing: -.5px; }
   .post-item p { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; font-size: 14px; line-height: 1.8; }
   .post-item .meta { gap: 6px; font-size: 12px; }
   .post-item .category { padding: 2px 5px; font-size: 11px; letter-spacing: 0; }
-  .byline { margin-top: 12px; font-size: 12px; }
   .thumb:not(.thumb-large) { width: 80px; height: 94px; border-radius: 9px; }
   .thumb:not(.thumb-large) .art-branch, .thumb:not(.thumb-large) .art-code, .thumb:not(.thumb-large) .art-wave, .thumb:not(.thumb-large) .art-notes { transform: scale(.72); }
   .page-intro { padding-top: 32px; }
@@ -453,7 +453,7 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--focus); outline
   .site-nav { gap: 14px; font-size: 15px; }
   .spot-copy h2 { font-size: 27px; }
   .post-item h3 { font-size: 19px; }
-  .post-link { gap: 12px; }
+  .post-link { column-gap: 12px; }
   .thumb:not(.thumb-large) { width: 66px; height: 82px; }
 }
 @media (prefers-reduced-motion: reduce) {
