@@ -122,8 +122,9 @@
     const previous = pagination.querySelector("[data-page-prev]");
     const next = pagination.querySelector("[data-page-next]");
     const pageNumbers = pagination.querySelector("[data-page-numbers]");
-    const pageJump = pagination.querySelector("[data-page-jump]");
-    const jumpControl = pageJump.closest("label");
+    const jumpControl = pagination.querySelector("[data-page-jump-form]");
+    const pageJump = jumpControl.querySelector("input");
+    const pageTotal = jumpControl.querySelector("[data-page-total]");
     const pageStatus = pagination.querySelector("[data-page-status]");
     const normalize = (text) => text.normalize("NFC").toLowerCase();
     const posts = Array.from(journal.querySelectorAll("[data-post]"), (post) => ({
@@ -138,13 +139,6 @@
     let selected = all;
     let page = 1;
     const renderPageNumbers = (pages) => {
-      pageJump.replaceChildren(...Array.from({ length: pages }, (_, index) => {
-        const number = index + 1;
-        const label = number === page ? `${page} / ${pages}` : `${number} 페이지`;
-        return new Option(label, number);
-      }));
-      pageJump.value = String(page);
-
       // 양끝과 현재 페이지 주변 세 페이지를 번호로 표시합니다.
       const start = Math.max(1, Math.min(page - 1, pages - 2));
       const items = [];
@@ -190,6 +184,11 @@
       if (countLabel.textContent !== label) countLabel.textContent = label;
       const pages = Math.ceil(count / size);
       pagination.hidden = pages <= 1;
+      if (pages > 1) {
+        pageJump.max = String(pages);
+        pageJump.value = String(page);
+        pageTotal.textContent = `/ ${pages}`;
+      }
       previous.disabled = page === 1;
       next.disabled = page >= pages;
       const status = pages > 1 ? `${page} / ${pages} 페이지` : "";
@@ -225,7 +224,10 @@
     pageSize.addEventListener("change", resetPage);
     previous.addEventListener("click", () => goToPage(page - 1));
     next.addEventListener("click", () => goToPage(page + 1));
-    pageJump.addEventListener("change", () => goToPage(Number(pageJump.value)));
+    jumpControl.addEventListener("submit", (event) => {
+      event.preventDefault();
+      goToPage(pageJump.valueAsNumber);
+    });
     buttons.forEach((button) => button.addEventListener("click", () => select(button)));
     journal.querySelector("[data-reset-filter]").addEventListener("click", () => {
       input.value = "";

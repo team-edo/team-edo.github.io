@@ -165,16 +165,17 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--focus); outline
 .journal-select::after { content: ""; position: absolute; inset-inline-end: 12px; width: 6px; height: 6px; border: solid currentColor; border-width: 0 1.5px 1.5px 0; transform: translateY(-2px) rotate(45deg); pointer-events: none; }
 .journal-select select { appearance: none; min-height: 40px; padding: 5px 28px 5px 12px; border: 0; border-radius: 7px; background: var(--code-bg); color: inherit; font: inherit; font-size: 16px; cursor: pointer; }
 .journal-select select:hover { background: var(--lime-tint); }
-.journal-select select:focus-visible, .journal-pagination button:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+.journal-select select:focus-visible, .journal-pagination button:focus-visible, .journal-page-jump input:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
 .journal-page-size { margin-inline-start: auto; }
 .journal-pagination, .journal-page-numbers { display: flex; justify-content: center; align-items: center; gap: 6px; }
 .journal-pagination { margin-top: 24px; color: var(--muted); font-size: 14px; }
 .journal-pagination button { min-width: 44px; min-height: 44px; padding: 6px 8px; border: 1px solid #c7c9bc; border-radius: 7px; background: var(--paper); color: var(--ink); font: inherit; }
 .journal-pagination > button { font-size: 21px; line-height: 1; }
 .journal-page-gap { min-width: 16px; text-align: center; }
-.journal-page-jump { color: var(--lime-ink); }
-.journal-page-jump select { min-height: 44px; background: var(--lime-tint); font-weight: 600; }
-.journal-page-jump select:hover { background: var(--lime); color: var(--ink); }
+.journal-page-jump { display: flex; align-items: center; gap: 6px; color: var(--lime-ink); }
+.journal-page-jump input { appearance: textfield; width: 3.25em; min-height: 44px; padding: 6px 4px; border: 1px solid #c7c9bc; border-radius: 7px; background: var(--lime-tint); color: inherit; font: inherit; font-size: 16px; font-weight: 600; text-align: center; }
+.journal-page-jump input::-webkit-inner-spin-button, .journal-page-jump input::-webkit-outer-spin-button { appearance: none; margin: 0; }
+.journal-page-jump [data-page-total] { white-space: nowrap; }
 .journal-pagination button:hover:not(:disabled) { background: var(--lime-tint); }
 .journal-pagination button:disabled { border-color: var(--line); color: var(--muted); background: var(--code-bg); cursor: default; }
 .noscript-note { font-size: 14px; }
@@ -390,7 +391,7 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--focus); outline
   .journal-heading { flex-basis: 100%; }
   .journal-search { flex-basis: 100%; max-width: none; margin-inline-start: 0; }
   .journal-search input, .journal-search .button-primary, .journal-page-size select { min-height: 44px; }
-  .journal-pagination > button, .journal-page-numbers button:not(.journal-page-neighbor), .journal-page-gap { display: none; }
+  .journal-pagination > button, .journal-page-numbers > button:not(.journal-page-neighbor), .journal-page-gap { display: none; }
   .spotlight { gap: 24px; }
   .spot-copy h2 { font-size: 30px; }
   .spot-copy p { font-size: 15px; }
