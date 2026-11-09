@@ -142,10 +142,10 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--focus); outline
 .journal-search .button-primary:hover { background: var(--lime); color: var(--ink); }
 .journal-search input:focus-visible, .journal-search button:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
 .post-item { border-bottom: 1px solid var(--line); }
-.post-link { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 8px 28px; padding: 24px 0 8px; }
+.post-link { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 8px 28px; padding: 26px 0 13px; }
 .post-copy { min-width: 0; }
 .post-card-meta { display: flex; flex-wrap: wrap; align-items: center; column-gap: 10px; }
-.post-card-meta .post-meta { margin-inline-start: auto; }
+.post-card-meta .post-meta { margin-inline-start: auto; color: #777671; }
 .post-item h3 { margin: 11px 0 9px; font-size: 23px; font-weight: 600; line-height: 1.5; letter-spacing: -.65px; }
 .post-link:hover h3 { text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
 .post-item p { margin: 0; color: var(--muted); font-size: 15px; line-height: 1.85; }
@@ -157,11 +157,13 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--focus); outline
 .filters button[aria-pressed="true"] { border-color: var(--lime); background: var(--lime); font-weight: 700; }
 .noscript-note { font-size: 14px; }
 .side-block.reading { padding: 22px; background: #fff; border: 1px solid var(--line); }
+.side-block.reading--latest { background: var(--code-bg); border: 0; }
 .article > .reading { margin: 40px 0 0; }
 .reading h2 { margin-left: 0; }
 .reading ol { list-style: none; margin: 0; padding: 0; }
 .reading li + li { border-top: 1px solid var(--line); }
 .reading a { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 10px; padding: 14px 0 8px; font-size: 15px; line-height: 1.65; }
+.reading--latest a { padding-block: 16px 12px; }
 .reading a:hover strong { text-decoration: underline; text-underline-offset: 3px; }
 .reading b { min-width: 20px; padding-top: 1px; font-size: 13px; color: #627010; }
 .reading strong { font-weight: 500; line-height: 1.7; }
@@ -405,7 +407,7 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--focus); outline
   .journal-layout { padding: 12px 0 35px; }
   .article-header { padding: 4px 0 9px; }
   .article-header h2 { font-size: 25px; }
-  .post-link { column-gap: 16px; padding-top: 20px; }
+  .post-link { column-gap: 16px; padding-top: 22px; }
   .post-item h3 { margin: 10px 0 8px; font-size: 20px; letter-spacing: -.5px; }
   .post-item p { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; font-size: 14px; line-height: 1.8; }
   .post-item .meta { gap: 6px; font-size: 12px; }
