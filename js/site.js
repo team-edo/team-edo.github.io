@@ -164,6 +164,7 @@
           const button = document.createElement("button");
           button.type = "button";
           button.textContent = String(number);
+          button.classList.toggle("journal-page-neighbor", Math.abs(number - page) === 1);
           button.setAttribute("aria-label", `${number} 페이지`);
           button.addEventListener("click", () => goToPage(number));
           items.push(button);

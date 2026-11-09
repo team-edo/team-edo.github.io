@@ -390,7 +390,7 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--focus); outline
   .journal-heading { flex-basis: 100%; }
   .journal-search { flex-basis: 100%; max-width: none; margin-inline-start: 0; }
   .journal-search input, .journal-search .button-primary, .journal-page-size select { min-height: 44px; }
-  .journal-page-numbers button, .journal-page-gap { display: none; }
+  .journal-pagination > button, .journal-page-numbers button:not(.journal-page-neighbor), .journal-page-gap { display: none; }
   .spotlight { gap: 24px; }
   .spot-copy h2 { font-size: 30px; }
   .spot-copy p { font-size: 15px; }
