@@ -109,13 +109,18 @@
     controls.hidden = false;
   });
 
-  // 제목·태그 검색과 분야 필터를 함께 적용합니다.
+  // 제목·태그와 분야에 맞는 결과만 페이지로 나눕니다.
   document.querySelectorAll("[data-journal]").forEach((journal) => {
-    const group = journal.querySelector("[data-filter-group]");
-    if (!group) return;
-    const buttons = Array.from(group.querySelectorAll("[data-value]"));
+    const refine = journal.querySelector("[data-journal-refine]");
+    if (!refine) return;
+    const buttons = Array.from(refine.querySelectorAll("[data-value]"));
     const search = journal.querySelector("[data-post-search]");
     const input = search.querySelector("input");
+    const pageSize = refine.querySelector("[data-page-size]");
+    const pagination = journal.querySelector("[data-pagination]");
+    const previous = pagination.querySelector("[data-page-prev]");
+    const next = pagination.querySelector("[data-page-next]");
+    const pageStatus = pagination.querySelector("[data-page-status]");
     const normalize = (text) => text.normalize("NFC").toLowerCase();
     const posts = Array.from(journal.querySelectorAll("[data-post]"), (post) => ({
       post, categories: post.dataset.category.split(" "), keywords: normalize(post.dataset.search),
@@ -125,43 +130,65 @@
     const title = journal.querySelector("#all-title");
     const defaultTitle = title.textContent;
     const countLabel = journal.querySelector("[data-filter-result]");
-    const all = group.querySelector('[data-value="all"]');
+    const all = refine.querySelector('[data-value="all"]');
     let selected = all;
+    let page = 1;
     const showResults = () => {
       const terms = normalize(input.value.trim()).split(/\s+/).filter(Boolean);
+      const size = pageSize.value === "all" ? posts.length : Number(pageSize.value);
+      const start = (page - 1) * size;
       let count = 0;
       posts.forEach(({post, categories, keywords}) => {
         const inCategory = selected === all || categories.includes(selected.dataset.value);
-        const visible = inCategory && terms.every((term) => keywords.includes(term));
-        post.hidden = !visible;
-        if (visible) count += 1;
+        const matches = inCategory && terms.every((term) => keywords.includes(term));
+        post.hidden = !matches || count < start || count >= start + size;
+        if (matches) count += 1;
       });
       empty.hidden = count > 0;
       emptyMessage.textContent = terms.length ? "검색 조건에 맞는 글이 없어요." : "이 분야의 글을 준비하고 있어요.";
       const label = `${count}편`;
       if (countLabel.textContent !== label) countLabel.textContent = label;
+      const pages = Math.ceil(count / size);
+      pagination.hidden = pages <= 1;
+      previous.disabled = page === 1;
+      next.disabled = page >= pages;
+      const status = pages > 1 ? `${page} / ${pages} 페이지` : "";
+      if (pageStatus.textContent !== status) pageStatus.textContent = status;
+    };
+    const resetPage = () => {
+      page = 1;
+      showResults();
+    };
+    const changePage = (offset) => {
+      page += offset;
+      showResults();
+      title.focus({ preventScroll: true });
+      title.closest(".article-header").scrollIntoView({ behavior: "instant", block: "start" });
     };
     const select = (button) => {
       selected = button;
       buttons.forEach((other) => other.setAttribute("aria-pressed", String(other === button)));
       title.textContent = button === all ? defaultTitle : button.textContent.trim();
-      showResults();
+      resetPage();
     };
     search.addEventListener("submit", (event) => {
       event.preventDefault();
-      showResults();
+      resetPage();
     });
     input.addEventListener("input", (event) => {
-      if (!event.isComposing) showResults();
+      if (!event.isComposing) resetPage();
     });
-    input.addEventListener("compositionend", showResults);
+    input.addEventListener("compositionend", resetPage);
+    pageSize.addEventListener("change", resetPage);
+    previous.addEventListener("click", () => changePage(-1));
+    next.addEventListener("click", () => changePage(1));
     buttons.forEach((button) => button.addEventListener("click", () => select(button)));
     journal.querySelector("[data-reset-filter]").addEventListener("click", () => {
       input.value = "";
       select(all);
       all.focus();
     });
-    group.hidden = false;
+    refine.hidden = false;
     search.hidden = false;
     showResults();
   });

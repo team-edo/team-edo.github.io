@@ -132,6 +132,7 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--focus); outline
 @media (prefers-reduced-motion: no-preference) {
   html:has([data-journal]) { scroll-snap-type: y proximity; scroll-padding-top: 24px; }
   #page-top, [data-journal] .article-header, [data-journal] .post-item { scroll-snap-align: start; }
+  .journal-pagination { scroll-snap-align: end; }
 }
 .journal-layout { display: grid; grid-template-columns: 248px minmax(0, 1fr); gap: 64px; padding: 25px 0 65px; }
 .journal-main { grid-column: 2; grid-row: 1; min-width: 0; }
@@ -155,10 +156,18 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--focus); outline
 .post-item p { margin: 0; color: var(--muted); font-size: 15px; line-height: 1.85; }
 .side-block { margin-bottom: 26px; padding: 22px 18px; border-radius: 12px; background: #f7f8f5; }
 .side-block h2 { margin: 0 9px 17px; font-size: 18px; font-weight: 600; line-height: 1.5; }
-.filters { display: flex; flex: 0 0 100%; flex-wrap: wrap; gap: 6px; min-width: 0; }
+.journal-refine { display: flex; flex: 0 0 100%; flex-wrap: wrap; align-items: center; gap: 8px 16px; min-width: 0; }
+.filters { display: flex; flex-wrap: wrap; gap: 6px; min-width: 0; }
 .filters button { max-width: 100%; min-width: 40px; min-height: 44px; padding: 6px 9px; border: 1px solid #c7c9bc; border-radius: 7px; background: var(--paper); font-size: 13px; line-height: 1.25; }
 .filters button:hover { background: var(--lime-tint); }
 .filters button[aria-pressed="true"] { border-color: var(--lime); background: var(--lime); font-weight: 700; }
+.journal-page-size { display: flex; align-items: center; gap: 8px; margin-inline-start: auto; color: var(--muted); font-size: 13px; }
+.journal-page-size select, .journal-pagination button { min-height: 44px; padding: 6px 12px; border: 1px solid #c7c9bc; border-radius: 7px; background: var(--paper); color: var(--ink); font: inherit; }
+.journal-page-size select { font-size: 16px; }
+.journal-page-size select:focus-visible, .journal-pagination button:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+.journal-pagination { display: flex; justify-content: center; align-items: center; gap: 12px; margin-top: 24px; color: var(--muted); font-size: 14px; }
+.journal-pagination button:hover:not(:disabled) { background: var(--lime-tint); }
+.journal-pagination button:disabled { border-color: var(--line); color: var(--muted); background: var(--code-bg); cursor: default; }
 .noscript-note { font-size: 14px; }
 .side-block.reading { padding: 22px; background: #fff; border: 1px solid var(--line); }
 .side-block.reading--latest { background: var(--code-bg); border: 0; }
