@@ -111,12 +111,12 @@
 
   // 제목·태그와 분야에 맞는 결과만 페이지로 나눕니다.
   document.querySelectorAll("[data-journal]").forEach((journal) => {
-    const refine = journal.querySelector("[data-journal-refine]");
-    if (!refine) return;
-    const buttons = Array.from(refine.querySelectorAll("[data-value]"));
+    const group = journal.querySelector("[data-filter-group]");
+    if (!group) return;
+    const buttons = Array.from(group.querySelectorAll("[data-value]"));
     const search = journal.querySelector("[data-post-search]");
     const input = search.querySelector("input");
-    const pageSize = refine.querySelector("[data-page-size]");
+    const pageSize = journal.querySelector("[data-page-size]");
     const pagination = journal.querySelector("[data-pagination]");
     const previous = pagination.querySelector("[data-page-prev]");
     const next = pagination.querySelector("[data-page-next]");
@@ -130,7 +130,7 @@
     const title = journal.querySelector("#all-title");
     const defaultTitle = title.textContent;
     const countLabel = journal.querySelector("[data-filter-result]");
-    const all = refine.querySelector('[data-value="all"]');
+    const all = group.querySelector('[data-value="all"]');
     let selected = all;
     let page = 1;
     const showResults = () => {
@@ -188,7 +188,8 @@
       select(all);
       all.focus();
     });
-    refine.hidden = false;
+    group.hidden = false;
+    pageSize.closest("label").hidden = false;
     search.hidden = false;
     showResults();
   });
