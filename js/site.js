@@ -109,7 +109,7 @@
     controls.hidden = false;
   });
 
-  // 제목·태그와 분야에 맞는 결과만 페이지로 나눕니다.
+  // 검색어와 분야에 맞는 결과만 페이지로 나눕니다.
   document.querySelectorAll("[data-journal]").forEach((journal) => {
     const controls = journal.querySelector("[data-journal-controls]");
     if (!controls) return;
@@ -119,15 +119,16 @@
     const input = search.querySelector("input");
     const pageSize = journal.querySelector("[data-page-size]");
     const pagination = journal.querySelector("[data-pagination]");
+    const first = pagination.querySelector("[data-page-first]");
     const previous = pagination.querySelector("[data-page-prev]");
     const next = pagination.querySelector("[data-page-next]");
+    const last = pagination.querySelector("[data-page-last]");
     const pageNumbers = pagination.querySelector("[data-page-numbers]");
-    const jumpControl = pagination.querySelector("[data-page-jump-form]");
-    const pageJump = jumpControl.querySelector("input");
     const pageStatus = pagination.querySelector("[data-page-status]");
     const normalize = (text) => text.normalize("NFC").toLowerCase();
     const posts = Array.from(journal.querySelectorAll("[data-post]"), (post) => ({
       post, categories: post.dataset.category.split(" "), keywords: normalize(post.dataset.search),
+      path: post.querySelector(".post-link").getAttribute("href"),
     }));
     const empty = journal.querySelector("[data-empty]");
     const emptyMessage = empty.querySelector("[data-empty-message]");
@@ -136,25 +137,17 @@
     const countLabel = journal.querySelector("[data-filter-result]");
     const all = group.querySelector('[data-value="all"]');
     let selected = all;
+    let pages = 1;
     let page = 1;
+    let bodyIndexState = "idle";
     const renderPageNumbers = (pages) => {
-      // 양끝과 현재 페이지 주변 세 페이지를 번호로 표시합니다.
-      const start = Math.max(1, Math.min(page - 1, pages - 2));
+      const visible = Math.min(5, pages);
+      const start = Math.max(1, Math.min(page - 2, pages - visible + 1));
       const items = [];
-      let lastNumber = 0;
-      for (let number = 1; number <= pages; number += 1) {
-        if (number !== 1 && number !== pages && (number < start || number > start + 2)) continue;
-        if (number - lastNumber > 1) {
-          const gap = document.createElement("span");
-          gap.className = "journal-page-gap";
-          gap.setAttribute("aria-hidden", "true");
-          gap.textContent = "…";
-          items.push(gap);
-        }
+      for (let number = start; number < start + visible; number += 1) {
         const button = document.createElement("button");
         button.type = "button";
         button.textContent = String(number);
-        button.classList.toggle("journal-page-neighbor", Math.abs(number - page) === 1);
         button.setAttribute("aria-label", `${number} 페이지`);
         if (number === page) {
           button.disabled = true;
@@ -163,7 +156,6 @@
           button.addEventListener("click", () => goToPage(number));
         }
         items.push(button);
-        lastNumber = number;
       }
       pageNumbers.replaceChildren(...items);
     };
@@ -179,24 +171,43 @@
         if (matches) count += 1;
       });
       empty.hidden = count > 0;
-      emptyMessage.textContent = terms.length ? "검색 조건에 맞는 글이 없어요." : "이 분야의 글을 준비하고 있어요.";
-      const label = `${count}편`;
+      const loadingBodies = terms.length && bodyIndexState === "loading";
+      const bodySearchFailed = terms.length && bodyIndexState === "error";
+      emptyMessage.textContent = !terms.length ? "이 분야의 글을 준비하고 있어요."
+        : loadingBodies ? "본문을 검색하고 있어요."
+        : bodySearchFailed ? "본문을 불러오지 못했어요. 검색을 다시 시도해 주세요."
+        : "검색 조건에 맞는 글이 없어요.";
+      const label = loadingBodies ? "본문 검색 중" : `${count}편${bodySearchFailed ? " · 본문 검색 실패" : ""}`;
       if (countLabel.textContent !== label) countLabel.textContent = label;
-      const pages = Math.ceil(count / size);
+      pages = Math.ceil(count / size);
       pagination.hidden = pages <= 1;
-      if (pages > 1) {
-        pageJump.max = String(pages);
-        pageJump.value = "";
-      }
-      previous.disabled = page === 1;
-      next.disabled = page >= pages;
+      first.disabled = previous.disabled = page === 1;
+      last.disabled = next.disabled = page >= pages;
       const status = pages > 1 ? `${page} / ${pages} 페이지` : "";
       if (pageStatus.textContent !== status) {
         if (pages > 1) renderPageNumbers(pages);
         pageStatus.textContent = status;
       }
     };
+    const loadPostBodies = async () => {
+      if (!input.value.trim() || bodyIndexState === "loading" || bodyIndexState === "ready") return;
+      bodyIndexState = "loading";
+      try {
+        const response = await fetch(journal.dataset.postSearchIndex, { signal: AbortSignal.timeout?.(8000) });
+        if (!response.ok) throw new Error("Post search index unavailable");
+        const bodies = await response.json();
+        posts.forEach((item) => {
+          item.keywords += ` ${normalize(bodies[item.path] ?? "")}`;
+        });
+        bodyIndexState = "ready";
+        page = 1;
+      } catch {
+        bodyIndexState = "error";
+      }
+      showResults();
+    };
     const resetPage = () => {
+      loadPostBodies();
       page = 1;
       showResults();
     };
@@ -221,12 +232,10 @@
     });
     input.addEventListener("compositionend", resetPage);
     pageSize.addEventListener("change", resetPage);
+    first.addEventListener("click", () => goToPage(1));
     previous.addEventListener("click", () => goToPage(page - 1));
     next.addEventListener("click", () => goToPage(page + 1));
-    jumpControl.addEventListener("submit", (event) => {
-      event.preventDefault();
-      goToPage(pageJump.valueAsNumber);
-    });
+    last.addEventListener("click", () => goToPage(pages));
     buttons.forEach((button) => button.addEventListener("click", () => select(button)));
     journal.querySelector("[data-reset-filter]").addEventListener("click", () => {
       input.value = "";
@@ -235,6 +244,6 @@
     });
     controls.hidden = false;
     search.hidden = false;
-    showResults();
+    resetPage();
   });
 })();

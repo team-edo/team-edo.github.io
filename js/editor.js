@@ -8,19 +8,27 @@
   const login = editor.querySelector("[data-editor-login]");
   const form = editor.querySelector("[data-editor-form]");
   const save = form?.querySelector('button[type="submit"]');
+  const remove = form?.querySelector("[data-editor-delete]");
+  const deleteDialog = editor.querySelector("[data-editor-delete-dialog]");
   const status = editor.querySelector("[data-editor-status]");
   const back = document.querySelector("[data-editor-back]");
+  const blogHome = back.href;
   const query = new URLSearchParams(location.search);
   const storageKey = "team-edo-post-editor";
   let post = canEdit ? query.get("post") : null;
   let returnPath = query.get("return");
   let session;
   let version;
+  let originalTitle;
 
   const encode = (bytes) => btoa(String.fromCharCode(...bytes))
     .replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
   const random = () => encode(crypto.getRandomValues(new Uint8Array(32)));
   const setStatus = (message) => { status.textContent = message; };
+  const setBusy = (busy) => {
+    save.disabled = busy;
+    if (remove) remove.disabled = busy;
+  };
 
   function setBackLink(path) {
     if (typeof path === "string" && path.startsWith("/posts/")) {
@@ -77,7 +85,7 @@
   form?.addEventListener("submit", async (event) => {
     event.preventDefault();
     if (!session || save.disabled) return;
-    save.disabled = true;
+    setBusy(true);
     setStatus("저장 중입니다.");
     try {
       const {status: result} = await call("post", "PUT", {
@@ -91,7 +99,34 @@
     } catch (error) {
       setStatus(error.message);
     } finally {
-      save.disabled = false;
+      setBusy(false);
+    }
+  });
+
+  remove?.addEventListener("click", () => {
+    if (!session || remove.disabled || !deleteDialog) return;
+    deleteDialog.querySelector("[data-editor-delete-message]").textContent = `‘${originalTitle}’ 글을 삭제합니다.`;
+    deleteDialog.returnValue = "";
+    deleteDialog.showModal();
+  });
+
+  deleteDialog?.addEventListener("close", async () => {
+    if (!session || remove.disabled || deleteDialog.returnValue !== "delete") return;
+    setBusy(true);
+    setStatus("글을 삭제하고 있습니다.");
+    try {
+      const {status: result} = await call("post", "DELETE", {version}, session);
+      if (result !== "deleted") throw new Error("삭제 결과를 확인할 수 없습니다.");
+      session = undefined;
+      form.hidden = true;
+      back.href = blogHome;
+      back.textContent = "← 블로그로 돌아가기";
+      setStatus("글을 삭제했습니다. 자동 배포가 끝나면 공개 목록에서 사라집니다.");
+      back.focus();
+    } catch (error) {
+      setStatus(error.message);
+    } finally {
+      setBusy(false);
     }
   });
 
@@ -130,10 +165,12 @@
         if (!form || !result.session) throw new Error("작성자 확인 결과를 확인할 수 없습니다.");
         session = result.session;
         version = result.version;
-        form.elements.title.value = result.title;
+        originalTitle = result.title;
+        form.elements.title.value = originalTitle;
         form.elements.markdown.value = result.markdown;
         form.hidden = false;
-        setStatus("제목과 본문을 수정할 수 있습니다.");
+        if (remove) remove.hidden = result.canDelete !== true || !deleteDialog;
+        setStatus(remove && !remove.hidden ? "제목과 본문을 수정하거나 글을 삭제할 수 있습니다." : "제목과 본문을 수정할 수 있습니다.");
         form.elements.title.focus();
       } catch (error) {
         setStatus(error.message);

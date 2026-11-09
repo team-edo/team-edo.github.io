@@ -165,20 +165,16 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--focus); outline
 .journal-select::after { content: ""; position: absolute; inset-inline-end: 12px; width: 6px; height: 6px; border: solid currentColor; border-width: 0 1.5px 1.5px 0; transform: translateY(-2px) rotate(45deg); pointer-events: none; }
 .journal-select select { appearance: none; min-height: 40px; padding: 5px 28px 5px 12px; border: 0; border-radius: 7px; background: var(--code-bg); color: inherit; font: inherit; font-size: 16px; cursor: pointer; }
 .journal-select select:hover { background: var(--lime-tint); }
-.journal-select select:focus-visible, .journal-pagination button:focus-visible, .journal-page-jump input:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+.journal-select select:focus-visible, .journal-pagination button:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
 .journal-page-size { margin-inline-start: auto; }
-.journal-pagination, .journal-page-links, .journal-page-numbers { display: flex; justify-content: center; align-items: center; gap: 6px; }
-.journal-pagination { flex-wrap: wrap; margin-top: 24px; color: var(--muted); font-size: 14px; }
-.journal-pagination button { min-width: 44px; min-height: 44px; padding: 6px 8px; border: 1px solid #c7c9bc; border-radius: 7px; background: var(--paper); color: var(--ink); font: inherit; }
-.journal-page-links > button { font-size: 21px; line-height: 1; }
-.journal-page-gap { min-width: 16px; text-align: center; }
-.journal-page-jump { display: flex; align-items: center; gap: 6px; color: var(--lime-ink); }
-.journal-page-jump input { appearance: textfield; width: 3.25em; min-height: 44px; padding: 6px 4px; border: 1px solid #c7c9bc; border-radius: 7px; background: var(--lime-tint); color: inherit; font: inherit; font-size: 16px; font-weight: 600; text-align: center; }
-.journal-page-jump input::-webkit-inner-spin-button, .journal-page-jump input::-webkit-outer-spin-button { appearance: none; margin: 0; }
-.journal-page-jump button { min-height: 36px; padding-block: 3px; }
-.journal-pagination button:hover:not(:disabled) { background: var(--lime-tint); }
-.journal-pagination button:disabled { border-color: var(--line); color: var(--muted); background: var(--code-bg); cursor: default; }
-.journal-page-numbers button[aria-current="page"] { border-color: var(--lime); background: var(--lime-tint); color: var(--lime-ink); font-weight: 600; }
+.journal-pagination, .journal-page-numbers { display: flex; justify-content: center; align-items: center; gap: 6px; }
+.journal-pagination { margin-top: 24px; color: var(--muted); font-size: 16px; }
+.journal-pagination button { min-width: 44px; min-height: 44px; padding: 0; border: 0; background: none; color: inherit; font: inherit; line-height: 1; }
+.journal-pagination > button { color: #778717; font-size: 23px; }
+.journal-pagination button:hover:not(:disabled) { text-decoration: underline; }
+.journal-pagination > button:disabled { opacity: .45; cursor: default; }
+.journal-page-numbers button[aria-current="page"] { position: relative; color: var(--lime-ink); font-size: 20px; font-weight: 700; cursor: default; }
+.journal-page-numbers button[aria-current="page"]::before { content: ""; position: absolute; top: 3px; left: 50%; width: 4px; height: 4px; border-radius: 50%; background: var(--lime); transform: translateX(-50%); }
 .noscript-note { font-size: 14px; }
 .side-block.reading { padding: 22px; background: #fff; border: 1px solid var(--line); }
 .side-block.reading--latest { background: var(--code-bg); border: 0; }
@@ -230,7 +226,13 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--focus); outline
 .post-editor input, .post-editor textarea { width: 100%; padding: 10px 12px; border: 1px solid #bcb9b0; border-radius: 6px; color: var(--ink); background: var(--paper); font: inherit; }
 .post-editor textarea { font-family: var(--mono); resize: vertical; }
 .post-editor input:focus-visible, .post-editor textarea:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
-.post-editor button { justify-self: start; margin-top: 8px; }
+.post-editor-actions { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
+.post-editor-delete { min-height: 44px; padding: 7px 14px; border: 1px solid #d9b9b2; border-radius: 9px; background: var(--paper); color: #8b312b; font-size: 14px; }
+.post-editor-delete:hover:not(:disabled) { background: #faf0ee; }
+.post-editor-actions button:disabled { opacity: .6; cursor: default; }
+.post-delete-dialog { width: min(420px, calc(100% - 32px)); padding: 20px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); color: var(--ink); }
+.post-delete-dialog::backdrop { background: #27221e66; }
+.post-delete-dialog h2 { margin: 0; font-size: 21px; }
 .post-meta { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: baseline; gap: 0 8px; font-size: 13px; color: #77756f; }
 .post-meta time { white-space: nowrap; }
 .article-body { font-size: 17px; line-height: 1.95; }
@@ -392,9 +394,8 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--focus); outline
   .journal-heading { flex-basis: 100%; }
   .journal-search { flex-basis: 100%; max-width: none; margin-inline-start: 0; }
   .journal-search input, .journal-search .button-primary, .journal-page-size select { min-height: 44px; }
-  .journal-pagination, .journal-page-links, .journal-page-numbers, .journal-page-jump { gap: 4px; }
-  .journal-page-jump input { width: 3em; }
-  .journal-page-numbers > button:not(.journal-page-neighbor):not([aria-current]), .journal-page-gap { display: none; }
+  .journal-pagination, .journal-page-numbers { gap: 2px; }
+  .journal-pagination button { min-width: 34px; }
   .spotlight { gap: 24px; }
   .spot-copy h2 { font-size: 30px; }
   .spot-copy p { font-size: 15px; }
@@ -474,7 +475,7 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--focus); outline
   .site-footer { font-size: 12px; }
 }
 @media (max-width: 380px) {
-  .journal-page-numbers > .journal-page-neighbor { display: none; }
+  .journal-pagination button { min-width: 28px; }
   .scene { padding-right: 10px; }
   .scene .tiger { left: -8px; width: 125px; height: 175px; }
   .jeonggan { left: -3px; }
