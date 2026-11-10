@@ -209,6 +209,7 @@
       form.elements.markdown.value = content.markdown;
     }
     form.hidden = false;
+    form.dispatchEvent(new Event("post-editor:loaded"));
     setBusy(busy);
     setStatus(entry.deletePending ? "삭제 대기에 추가했습니다. 공개 글은 반영 전까지 유지됩니다."
       : isStale() ? "공개 글이 바뀌었습니다. 임시 저장본을 복사하고 대기에서 취소한 뒤 최신 글을 확인해 주세요."
