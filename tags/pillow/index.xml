@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Pillow on 얼쑤 · Team Edo</title><link>https://team-edo.github.io/tags/pillow/</link><description>Recent content in Pillow on 얼쑤 · Team Edo</description><generator>Hugo</generator><language>ko-kr</language><lastBuildDate>Thu, 12 Nov 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://team-edo.github.io/tags/pillow/index.xml" rel="self" type="application/rss+xml"/><item><title>VectorDrawable 셰이딩과 래스터 외곽선 정규화로 홈 일러스트 통일하기</title><link>https://team-edo.github.io/posts/2026/11/card-illustration-vector-raster-pipeline/</link><pubDate>Thu, 12 Nov 2026 00:00:00 +0000</pubDate><guid>https://team-edo.github.io/posts/2026/11/card-illustration-vector-raster-pipeline/</guid><description>&lt;p>얼쑤 홈 화면에는 6개 기능 카드가 2열 그리드로 놓이고, 카드마다 일러스트가 하나씩 들어갑니다. 이 일러스트를 두 단계로 교체했습니다.&lt;/p>
+&lt;ol>
+&lt;li>&lt;strong>식별성:&lt;/strong> 카드끼리 구별되도록 VectorDrawable로 다시 그렸습니다.&lt;/li>
+&lt;li>&lt;strong>일관성:&lt;/strong> 출처가 다른 래스터 그림을 섞어 쓰면서, 외곽선 두께와 색감을 하나의 기준으로 정규화했습니다.&lt;/li>
+&lt;/ol>
+&lt;p>Compose Multiplatform 공유 리소스(&lt;code>composeResources/drawable&lt;/code>)로 Android·iOS·Web에 같은 파일을 배포하는 환경입니다.&lt;/p>
+&lt;p>&lt;img src="https://team-edo.github.io/blog-images/2026-11-card-illustration-vector-raster-pipeline-before-after.webp" alt="변경 전 홈 카드와 최종 홈 카드 비교">&lt;/p>
+&lt;p>왼쪽은 1단계 이전, 오른쪽은 2단계 이후입니다. 1단계의 벡터 결과물은 2단계에서 대체되어 비교에서 뺐습니다.&lt;/p></description></item></channel></rss>
