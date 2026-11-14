@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>앱 서명 on 얼쑤 · Team Edo</title><link>https://team-edo.github.io/tags/%EC%95%B1-%EC%84%9C%EB%AA%85/</link><description>Recent content in 앱 서명 on 얼쑤 · Team Edo</description><generator>Hugo</generator><language>ko-kr</language><lastBuildDate>Sat, 14 Nov 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://team-edo.github.io/tags/%EC%95%B1-%EC%84%9C%EB%AA%85/index.xml" rel="self" type="application/rss+xml"/><item><title>개인 Play 계정의 첫 출시 준비: 비공개 테스트 조건과 업로드 키 결정</title><link>https://team-edo.github.io/posts/2026/11/play-release-testers-and-upload-key/</link><pubDate>Sat, 14 Nov 2026 00:00:00 +0000</pubDate><guid>https://team-edo.github.io/posts/2026/11/play-release-testers-and-upload-key/</guid><description>&lt;p>얼쑤 Android 앱을 Google Play에 처음 올리면서 두 가지를 먼저 정해야 했습니다.&lt;/p>
+&lt;ol>
+&lt;li>&lt;strong>테스터:&lt;/strong> 개인 계정은 비공개 테스트를 통과해야 프로덕션 출시를 신청할 수 있습니다. 누구를 어떻게 모아야 집계되는지 확인했습니다.&lt;/li>
+&lt;li>&lt;strong>서명 키:&lt;/strong> 어떤 키로 첫 AAB를 서명할지 정했습니다. 첫 업로드에 쓴 키가 이후 계속 쓰는 업로드 키가 됩니다.&lt;/li>
+&lt;/ol>
+&lt;p>둘 다 한 번 진행하면 되돌리기 어렵거나 시간이 오래 걸리는 결정이라, 시작 전에 조건을 정리했습니다.&lt;/p></description></item></channel></rss>
