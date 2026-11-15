@@ -327,11 +327,11 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--focus); outline
 .jeonggan-column .accent { background: #f0f3d8; color: #46511d; box-shadow: inset 0 0 0 1px var(--lime); }
 .jeonggan-column .beat { font-size: 17px; font-weight: 400; color: #b8b1a3; }
 .jeonggan-column .rest { font-size: 16px; color: #a49c8b; }
-.phone { --screen-w: 236px; --screen-scale: .6051282051; position: relative; flex: none; width: calc(var(--screen-w) + 18px); padding: 6px; border: 3px solid #191c1f; border-radius: 27px; background: #292d30; transform: rotate(5deg); transform-origin: 50% 55%; box-shadow: 10px 16px 0 #f2f3ef, 18px 24px 30px -22px #27221e40; isolation: isolate; }
+.phone { --screen-w: 236px; position: relative; flex: none; width: calc(var(--screen-w) + 18px); padding: 6px; border: 3px solid #191c1f; border-radius: 27px; background: #292d30; transform: rotate(5deg); transform-origin: 50% 55%; box-shadow: 10px 16px 0 #f2f3ef, 18px 24px 30px -22px #27221e40; isolation: isolate; }
 .phone::before { content: ""; position: absolute; top: 13px; left: 50%; z-index: 3; width: 6px; height: 6px; border-radius: 50%; background: #121416; box-shadow: 0 0 0 1px #343b3a; transform: translateX(-50%); }
 .phone::after { content: ""; position: absolute; right: -5px; top: 84px; width: 3px; height: 43px; border-radius: 0 2px 2px 0; background: #30383a; }
 .phone-screen { position: relative; width: var(--screen-w); height: calc(var(--screen-w) * 844 / 390); overflow: hidden; border-radius: 19px; background: #f9faf9; }
-.phone-screen iframe { position: absolute; left: 0; top: 0; display: block; width: 390px; height: 844px; max-width: none; border: 0; transform: scale(var(--screen-scale)); transform-origin: top left; pointer-events: none; }
+.phone-screen img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; }
 .project-details { max-width: 1036px; margin: 0 auto; padding: 30px 24px 56px; border-top: 1px solid var(--line); }
 .project-details h2 { margin: 0 0 30px; font-size: 30px; font-weight: 700; line-height: 1.5; }
 .project-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 27px; list-style: none; margin: 0; padding: 0; }
@@ -387,7 +387,7 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--focus); outline
   .jeonggan { left: 0; top: 25px; }
   .jeonggan-column { width: 39px; }
   .jeonggan-column span { height: 35px; }
-  .phone { --screen-w: 200px; --screen-scale: .5128205128; }
+  .phone { --screen-w: 200px; }
 }
 @media (max-width: 850px) {
   .member-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
@@ -428,7 +428,7 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--focus); outline
   .jeonggan { left: 16px; top: 20px; gap: 5px; font-size: 18px; }
   .jeonggan-column { width: 39px; }
   .jeonggan-column span { height: 35px; }
-  .phone { --screen-w: 210px; --screen-scale: .5384615385; }
+  .phone { --screen-w: 210px; }
 }
 
 /* ≤600px: mobile header and single column */
@@ -498,7 +498,7 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--focus); outline
   .jeonggan { left: -3px; }
   .jeonggan-column { width: 33px; }
   .jeonggan-column span { height: 32px; }
-  .phone { --screen-w: 190px; --screen-scale: .4871794872; }
+  .phone { --screen-w: 190px; }
 }
 @media (max-width: 360px) {
   .wrap { padding-left: 18px; padding-right: 18px; }
